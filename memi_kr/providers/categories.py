@@ -75,7 +75,6 @@ SIGHT_DATES = {
     "Barbican": "1499",
     "St. Florian's Gate": "14th century",
     "Collegium Maius": "15th century",
-    "Wawel Dragon": "statue, 1972",
     "Town Hall Tower": "14th century",
     "Main Square": "laid out 1257",
     "Planty Park": "1820s",
@@ -127,7 +126,6 @@ class Sights(WikiImages, CategoryProvider):
         "Barbican",
         "St. Florian's Gate",
         "Collegium Maius",
-        "Wawel Dragon",
         "Town Hall Tower",
         "Main Square",
         "Planty Park",
@@ -289,23 +287,22 @@ class Food(WikiImages, CategoryProvider):
 
 
 # --------------------------------------------------------------------------- #
-# Traditions & symbols — Kraków customs and emblems.                          #
+# Folklore — Kraków's legends and folk traditions.                            #
 # --------------------------------------------------------------------------- #
 
 
-class Traditions(WikiImages, CategoryProvider):
-    key = "culture:traditions"
+class Folklore(WikiImages, CategoryProvider):
+    key = "culture:folklore"
     override_name = True
     items = [
+        "Wawel Dragon",
+        "Pan Twardowski",
         "Lajkonik",
         "Szopka",
-        "Hejnał",
-        "Wianki",
-        "Coat of arms of Kraków",
+        "Sigismund Bell",
     ]
     queries = {
         "Szopka": "Szopka krakowska",
-        "Hejnał": "St. Mary's Trumpet Call",
     }
 
 
@@ -363,7 +360,7 @@ class Green(WikiImages, CategoryProvider):
 PROVIDERS = [
     Sights(),
     Food(),
-    Traditions(),
+    Folklore(),
     Districts(),
     Green(),
     People(),

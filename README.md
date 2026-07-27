@@ -7,11 +7,11 @@ Live at [kr.memi.click](https://kr.memi.click)
 
 ## Categories
 
-- **culture → sights** — 39 landmarks, churches, museums, mounds and the
-  Kazimierz synagogues (Wawel, St. Mary's, the Cloth Hall, MOCAK, Krakus Mound…)
+- **culture → sights** — 38 landmarks, churches, museums, mounds and the
+  Kazimierz synagogues, each tagged with its date (Wawel, St. Mary's, MOCAK…)
 - **culture → food** — 10 Kraków and Polish classics (obwarzanek, zapiekanka, pierogi…)
-- **culture → traditions** — 5 customs and symbols (Lajkonik, the szopka, the
-  Hejnał trumpet call, Wianki, the coat of arms)
+- **culture → folklore** — 5 legends and folk traditions (the Wawel Dragon,
+  Pan Twardowski, Lajkonik, the szopka, the Sigismund Bell)
 - **geography → districts** — 7 neighbourhoods, each shown as a locator map
   highlighting it on the city (Kazimierz, Podgórze, Nowa Huta…)
 - **geography → green** — 6 green spaces and the river (Vistula, Błonia, the
