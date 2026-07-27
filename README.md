@@ -7,14 +7,12 @@ Live at [kr.memi.click](https://kr.memi.click)
 
 ## Categories
 
-- **landmarks** — 14 iconic sights (Wawel, St. Mary's, the Cloth Hall…)
-- **churches** — 8 of Kraków's historic churches
-- **museums** — 7 museums (Schindler's Factory's neighbours: Rynek Underground,
-  Czartoryski, MOCAK, Manggha…)
-- **districts** — 7 neighbourhoods (Kazimierz, Podgórze, Nowa Huta…)
-- **food** — 10 Kraków and Polish classics (obwarzanek, zapiekanka, pierogi…)
+- **culture → museums** — 7 museums (Rynek Underground, Czartoryski, MOCAK, Manggha…)
+- **culture → churches** — 8 of Kraków's historic churches
+- **culture → food** — 10 Kraków and Polish classics (obwarzanek, zapiekanka, pierogi…)
+- **culture → landmarks** — 14 iconic sights (Wawel, St. Mary's, the Cloth Hall…)
+- **geography → districts** — 7 neighbourhoods (Kazimierz, Podgórze, Nowa Huta…)
 - **people** — 10 famous cracovians, tagged with what they're known for
-- **nearby** — 7 classic day trips (Wieliczka, Zakopane, Jasna Góra…)
 
 Images and *know more* links resolve from Wikipedia automatically. A small
 `WikiImages` mixin relaxes the engine's strict title lookup — following

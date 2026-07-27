@@ -68,7 +68,7 @@ class WikiImages:
 
 
 class Landmarks(WikiImages, CategoryProvider):
-    key = "landmarks"
+    key = "culture:landmarks"
     override_name = True
     items = [
         "Wawel Castle",
@@ -104,7 +104,7 @@ class Landmarks(WikiImages, CategoryProvider):
 
 
 class Churches(WikiImages, CategoryProvider):
-    key = "churches"
+    key = "culture:churches"
     override_name = True
     light_bg = True
     items = [
@@ -133,7 +133,7 @@ class Churches(WikiImages, CategoryProvider):
 
 
 class Museums(WikiImages, CategoryProvider):
-    key = "museums"
+    key = "culture:museums"
     override_name = True
     items = [
         "Rynek Underground",
@@ -156,7 +156,7 @@ class Museums(WikiImages, CategoryProvider):
 
 
 class Districts(WikiImages, CategoryProvider):
-    key = "districts"
+    key = "geography:districts"
     override_name = True
     items = [
         "Old Town",
@@ -179,7 +179,7 @@ class Districts(WikiImages, CategoryProvider):
 
 
 class Food(WikiImages, CategoryProvider):
-    key = "food"
+    key = "culture:food"
     override_name = True
     light_bg = True
     items = [
@@ -228,37 +228,13 @@ class People(WikiImages, CategoryProvider):
         return PEOPLE.get(item)
 
 
-# --------------------------------------------------------------------------- #
-# Nearby — classic day trips from Kraków.                                     #
-# --------------------------------------------------------------------------- #
-
-
-class Nearby(WikiImages, CategoryProvider):
-    key = "nearby"
-    override_name = True
-    items = [
-        "Wieliczka Salt Mine",
-        "Bochnia Salt Mine",
-        "Ojców National Park",
-        "Pieskowa Skała",
-        "Tyniec Abbey",
-        "Jasna Góra",
-        "Zakopane",
-    ]
-    queries = {
-        "Tyniec Abbey": "Tyniec",
-        "Jasna Góra": "Jasna Góra Monastery",
-    }
-
-
 PROVIDERS = [
-    Landmarks(),
-    Churches(),
     Museums(),
-    Districts(),
+    Churches(),
     Food(),
+    Landmarks(),
+    Districts(),
     People(),
-    Nearby(),
 ]
 for _provider in PROVIDERS:
     register(_provider)

@@ -11,13 +11,12 @@ def test_app_builds():
 def test_expected_category_keys():
     keys = {p.key for p in cat.PROVIDERS}
     assert keys == {
-        "landmarks",
-        "churches",
-        "museums",
-        "districts",
-        "food",
+        "culture:landmarks",
+        "culture:churches",
+        "culture:museums",
+        "culture:food",
+        "geography:districts",
         "people",
-        "nearby",
     }
 
 
