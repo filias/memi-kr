@@ -20,6 +20,12 @@ def test_expected_category_keys():
     }
 
 
+def test_every_sight_has_a_date():
+    s = cat.Sights()
+    for item in s.items:
+        assert s.get_tag(item), f"sight {item} has no date"
+
+
 def test_districts_use_maps():
     d = cat.Districts()
     for item in d.items:

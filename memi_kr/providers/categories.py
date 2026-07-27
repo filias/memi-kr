@@ -67,9 +67,58 @@ class WikiImages:
 # --------------------------------------------------------------------------- #
 
 
+SIGHT_DATES = {
+    # landmarks
+    "Wawel Castle": "14th century",
+    "St. Mary's Basilica": "14th century",
+    "Cloth Hall": "14th century",
+    "Barbican": "1499",
+    "St. Florian's Gate": "14th century",
+    "Collegium Maius": "15th century",
+    "Wawel Dragon": "statue, 1972",
+    "Town Hall Tower": "14th century",
+    "Main Square": "laid out 1257",
+    "Planty Park": "1820s",
+    "Kościuszko Mound": "1823",
+    "Schindler's Factory": "1937",
+    "Grunwald Monument": "1910",
+    "Słowacki Theatre": "1893",
+    # churches
+    "Wawel Cathedral": "14th century",
+    "Church of Saints Peter and Paul": "1619",
+    "Church of St. Adalbert": "11th century",
+    "St. Andrew's Church": "11th century",
+    "Skałka": "1742",
+    "Corpus Christi Basilica": "14th century",
+    "St. Anne's Church": "1703",
+    "St. Francis of Assisi Basilica": "13th century",
+    # museums (founded)
+    "Rynek Underground": "opened 2010",
+    "National Museum": "founded 1879",
+    "Czartoryski Museum": "founded 1796",
+    "MOCAK": "opened 2011",
+    "Ethnographic Museum": "founded 1911",
+    "Polish Aviation Museum": "founded 1964",
+    "Manggha": "opened 1994",
+    # mounds
+    "Piłsudski Mound": "1937",
+    "Krakus Mound": "early medieval",
+    "Wanda Mound": "early medieval",
+    # synagogues
+    "Old Synagogue": "15th century",
+    "Remah Synagogue": "1553",
+    "Tempel Synagogue": "1862",
+    "Izaak Synagogue": "1644",
+    "High Synagogue": "16th century",
+    "Kupa Synagogue": "1643",
+    "Popper Synagogue": "1620",
+}
+
+
 class Sights(WikiImages, CategoryProvider):
     key = "culture:sights"
     override_name = True
+    tag_style = "plain"
     items = [
         # landmarks
         "Wawel Castle",
@@ -155,6 +204,9 @@ class Sights(WikiImages, CategoryProvider):
                 result["url"] = f"https://en.wikipedia.org/wiki/{quote(title.replace(' ', '_'))}"
                 return result
         return super().get_image(item)
+
+    def get_tag(self, item):
+        return SIGHT_DATES.get(item)
 
 
 # --------------------------------------------------------------------------- #
