@@ -13,6 +13,7 @@ def test_expected_category_keys():
     assert keys == {
         "culture:sights",
         "culture:food",
+        "culture:traditions",
         "geography:districts",
         "people",
     }

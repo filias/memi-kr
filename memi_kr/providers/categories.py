@@ -103,6 +103,18 @@ class Sights(WikiImages, CategoryProvider):
         "Ethnographic Museum",
         "Polish Aviation Museum",
         "Manggha",
+        # mounds (Kościuszko Mound is above)
+        "Piłsudski Mound",
+        "Krakus Mound",
+        "Wanda Mound",
+        # synagogues (Kazimierz)
+        "Old Synagogue",
+        "Remah Synagogue",
+        "Tempel Synagogue",
+        "Izaak Synagogue",
+        "High Synagogue",
+        "Kupa Synagogue",
+        "Popper Synagogue",
     ]
     queries = {
         "St. Mary's Basilica": "St. Mary's Basilica, Kraków",
@@ -121,6 +133,10 @@ class Sights(WikiImages, CategoryProvider):
         "St. Francis of Assisi Basilica": "Church of St. Francis of Assisi, Kraków",
         "National Museum": "National Museum, Kraków",
         "Ethnographic Museum": "Ethnographic Museum in Kraków",
+        "Old Synagogue": "Old Synagogue, Kraków",
+        "Tempel Synagogue": "Tempel Synagogue, Kraków",
+        "Izaak Synagogue": "Isaac Synagogue, Kraków",
+        "High Synagogue": "High Synagogue, Kraków",
     }
     # Items whose Wikipedia lead image is a logo (or otherwise poor) — pin a
     # Wikimedia Commons photo of the actual building instead.
@@ -221,6 +237,27 @@ class Food(WikiImages, CategoryProvider):
 
 
 # --------------------------------------------------------------------------- #
+# Traditions & symbols — Kraków customs and emblems.                          #
+# --------------------------------------------------------------------------- #
+
+
+class Traditions(WikiImages, CategoryProvider):
+    key = "culture:traditions"
+    override_name = True
+    items = [
+        "Lajkonik",
+        "Szopka",
+        "Hejnał",
+        "Wianki",
+        "Coat of arms of Kraków",
+    ]
+    queries = {
+        "Szopka": "Szopka krakowska",
+        "Hejnał": "St. Mary's Trumpet Call",
+    }
+
+
+# --------------------------------------------------------------------------- #
 # People — famous cracovians. Tag = what they are known for (shown on reveal). #
 # --------------------------------------------------------------------------- #
 
@@ -251,6 +288,7 @@ class People(WikiImages, CategoryProvider):
 PROVIDERS = [
     Sights(),
     Food(),
+    Traditions(),
     Districts(),
     People(),
 ]
