@@ -302,6 +302,7 @@ class Green(WikiImages, CategoryProvider):
         "Kraków Zoo",
     ]
     queries = {
+        "Vistula Boulevards": "Vistulan Boulevards, Kraków",
         "Jordan Park": "Henryk Jordan Park",
         "Botanical Garden": "Botanical Garden of the Jagiellonian University",
     }
