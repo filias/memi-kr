@@ -17,7 +17,16 @@ def test_expected_category_keys():
         "geography:districts",
         "geography:green",
         "people",
+        "language",
     }
+
+
+def test_language_cards_reveal_polish():
+    lang = cat.Language()
+    for en in lang.items:
+        r = lang.get_image(en)
+        assert r["name"] == cat.PHRASES[en]           # revealed answer is Polish
+        assert r["image"].startswith("data:image/svg+xml")  # prompt is a text card
 
 
 def test_every_sight_has_a_date():

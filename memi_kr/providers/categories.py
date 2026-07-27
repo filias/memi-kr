@@ -6,6 +6,7 @@ display names still land on the right Wikipedia article: it follows redirects
 and falls back to a search when the exact title has no lead image.
 """
 
+import base64
 from functools import lru_cache
 from urllib.parse import quote
 
@@ -357,6 +358,66 @@ class Green(WikiImages, CategoryProvider):
     }
 
 
+# --------------------------------------------------------------------------- #
+# Language — read the English phrase (rendered as a text card), reveal the     #
+# Polish. Around 20 of the most useful words and greetings.                    #
+# --------------------------------------------------------------------------- #
+
+PHRASES = {
+    "hello": "cześć",
+    "good morning": "dzień dobry",
+    "good evening": "dobry wieczór",
+    "good night": "dobranoc",
+    "goodbye": "do widzenia",
+    "see you": "do zobaczenia",
+    "thank you": "dziękuję",
+    "please": "proszę",
+    "you're welcome": "nie ma za co",
+    "yes": "tak",
+    "no": "nie",
+    "sorry": "przepraszam",
+    "how are you?": "jak się masz?",
+    "cheers!": "na zdrowie!",
+    "I don't understand": "nie rozumiem",
+    "help!": "pomocy!",
+    "water": "woda",
+    "beer": "piwo",
+    "friend": "przyjaciel",
+    "love": "miłość",
+}
+
+
+def _text_card(text):
+    """Render a short English phrase as an SVG data-URI to use as the card image."""
+    size = min(60, max(28, 780 // max(len(text), 1)))
+    safe = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" '
+        'viewBox="0 0 640 420">'
+        '<rect width="640" height="420" fill="#f7f5f0"/>'
+        f'<text x="320" y="215" text-anchor="middle" dominant-baseline="middle" '
+        f"font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"{size}\" "
+        f'fill="#223344">{safe}</text>'
+        "</svg>"
+    )
+    b64 = base64.b64encode(svg.encode("utf-8")).decode("ascii")
+    return "data:image/svg+xml;base64," + b64
+
+
+class Language(CategoryProvider):
+    key = "language"
+    light_bg = True
+    items = list(PHRASES)
+
+    def get_image(self, item):
+        polish = PHRASES[item]
+        return {
+            "name": polish,
+            "image": _text_card(item),
+            "url": f"https://en.wiktionary.org/wiki/{quote(polish)}",
+        }
+
+
 PROVIDERS = [
     Sights(),
     Food(),
@@ -364,6 +425,7 @@ PROVIDERS = [
     Districts(),
     Green(),
     People(),
+    Language(),
 ]
 for _provider in PROVIDERS:
     register(_provider)
