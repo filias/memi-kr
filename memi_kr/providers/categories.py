@@ -213,7 +213,6 @@ PEOPLE = {
     "Jan Matejko": "painter",
     "Stanisław Wyspiański": "playwright and painter",
     "Helena Modjeska": "actress",
-    "Roman Polanski": "film director",
     "Veit Stoss": "sculptor of the St. Mary's altarpiece",
     "Czesław Miłosz": "poet, Nobel laureate",
 }
