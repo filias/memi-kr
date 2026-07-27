@@ -1,0 +1,26 @@
+[project]
+name = "memi-krakow"
+version = "0.1.0"
+description = "Memi Kraków - practise your memory about Kraków"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.0",
+    "gunicorn>=22",
+    "memi-engine>=0.1.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["memi_kr"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

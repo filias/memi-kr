@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+.idea/
+.DS_Store
+.pytest_cache/
+.ruff_cache/
+excluded_items.txt
+reported_items.log
