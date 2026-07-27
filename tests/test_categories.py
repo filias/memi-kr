@@ -15,6 +15,7 @@ def test_expected_category_keys():
         "culture:food",
         "culture:traditions",
         "geography:districts",
+        "geography:green",
         "people",
     }
 

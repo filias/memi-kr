@@ -285,11 +285,34 @@ class People(WikiImages, CategoryProvider):
         return f"{role} · {years}"
 
 
+# --------------------------------------------------------------------------- #
+# Green — the river, parks and green spaces of the city.                      #
+# --------------------------------------------------------------------------- #
+
+
+class Green(WikiImages, CategoryProvider):
+    key = "geography:green"
+    override_name = True
+    items = [
+        "Vistula",
+        "Vistula Boulevards",
+        "Błonia",
+        "Jordan Park",
+        "Botanical Garden",
+        "Kraków Zoo",
+    ]
+    queries = {
+        "Jordan Park": "Henryk Jordan Park",
+        "Botanical Garden": "Botanical Garden of the Jagiellonian University",
+    }
+
+
 PROVIDERS = [
     Sights(),
     Food(),
     Traditions(),
     Districts(),
+    Green(),
     People(),
 ]
 for _provider in PROVIDERS:

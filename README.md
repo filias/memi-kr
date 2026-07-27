@@ -14,6 +14,8 @@ Live at [kr.memi.click](https://kr.memi.click)
   Hejnał trumpet call, Wianki, the coat of arms)
 - **geography → districts** — 7 neighbourhoods, each shown as a locator map
   highlighting it on the city (Kazimierz, Podgórze, Nowa Huta…)
+- **geography → green** — 6 green spaces and the river (Vistula, Błonia, the
+  Botanical Garden, Kraków Zoo…)
 - **people** — 9 famous cracovians, tagged with what they're known for
 
 Images and *know more* links resolve from Wikipedia automatically. A small
