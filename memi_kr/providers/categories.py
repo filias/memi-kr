@@ -225,15 +225,16 @@ class Food(WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 PEOPLE = {
-    "Pope John Paul II": "pope, Archbishop of Kraków",
-    "Stanisław Lem": "science-fiction writer",
-    "Wisława Szymborska": "poet, Nobel laureate",
-    "Andrzej Wajda": "film director",
-    "Jan Matejko": "painter",
-    "Stanisław Wyspiański": "playwright and painter",
-    "Helena Modjeska": "actress",
-    "Veit Stoss": "sculptor of the St. Mary's altarpiece",
-    "Czesław Miłosz": "poet, Nobel laureate",
+    # name: (known for, born–died)
+    "Pope John Paul II": ("pope, Archbishop of Kraków", "1920–2005"),
+    "Stanisław Lem": ("science-fiction writer", "1921–2006"),
+    "Wisława Szymborska": ("poet, Nobel laureate", "1923–2012"),
+    "Andrzej Wajda": ("film director", "1926–2016"),
+    "Jan Matejko": ("painter", "1838–1893"),
+    "Stanisław Wyspiański": ("playwright and painter", "1869–1907"),
+    "Helena Modjeska": ("actress", "1840–1909"),
+    "Veit Stoss": ("sculptor of the St. Mary's altarpiece", "c. 1447–1533"),
+    "Czesław Miłosz": ("poet, Nobel laureate", "1911–2004"),
 }
 
 
@@ -243,7 +244,8 @@ class People(WikiImages, CategoryProvider):
     tag_style = "plain"
 
     def get_tag(self, item):
-        return PEOPLE.get(item)
+        role, years = PEOPLE[item]
+        return f"{role} · {years}"
 
 
 PROVIDERS = [
