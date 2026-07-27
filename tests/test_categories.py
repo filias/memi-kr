@@ -11,13 +11,17 @@ def test_app_builds():
 def test_expected_category_keys():
     keys = {p.key for p in cat.PROVIDERS}
     assert keys == {
-        "culture:landmarks",
-        "culture:churches",
-        "culture:museums",
+        "culture:sights",
         "culture:food",
         "geography:districts",
         "people",
     }
+
+
+def test_districts_use_maps():
+    d = cat.Districts()
+    for item in d.items:
+        assert item in d.maps, f"district {item} has no locator map"
 
 
 def test_no_empty_or_duplicate_items():

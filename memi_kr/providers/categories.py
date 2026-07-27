@@ -10,7 +10,7 @@ from functools import lru_cache
 from urllib.parse import quote
 
 import requests
-from memi_engine import CategoryProvider, register
+from memi_engine import CategoryProvider, images, register
 
 WIKIPEDIA_LANG = "en"
 _WIKI_UA = {"User-Agent": "memi-krakow (+https://kr.memi.click)"}
@@ -63,14 +63,15 @@ class WikiImages:
 
 
 # --------------------------------------------------------------------------- #
-# Landmarks — the iconic sights of the old royal capital.                     #
+# Sights — landmarks, churches and museums, all the great things to see.       #
 # --------------------------------------------------------------------------- #
 
 
-class Landmarks(WikiImages, CategoryProvider):
-    key = "culture:landmarks"
+class Sights(WikiImages, CategoryProvider):
+    key = "culture:sights"
     override_name = True
     items = [
+        # landmarks
         "Wawel Castle",
         "St. Mary's Basilica",
         "Cloth Hall",
@@ -85,6 +86,23 @@ class Landmarks(WikiImages, CategoryProvider):
         "Schindler's Factory",
         "Grunwald Monument",
         "Słowacki Theatre",
+        # churches
+        "Wawel Cathedral",
+        "Church of Saints Peter and Paul",
+        "Church of St. Adalbert",
+        "St. Andrew's Church",
+        "Skałka",
+        "Corpus Christi Basilica",
+        "St. Anne's Church",
+        "St. Francis of Assisi Basilica",
+        # museums
+        "Rynek Underground",
+        "National Museum",
+        "Czartoryski Museum",
+        "MOCAK",
+        "Ethnographic Museum",
+        "Polish Aviation Museum",
+        "Manggha",
     ]
     queries = {
         "St. Mary's Basilica": "St. Mary's Basilica, Kraków",
@@ -95,69 +113,27 @@ class Landmarks(WikiImages, CategoryProvider):
         "Schindler's Factory": "Oskar Schindler's Enamel Factory",
         "Grunwald Monument": "Grunwald Monument, Kraków",
         "Słowacki Theatre": "Juliusz Słowacki Theatre",
-    }
-
-
-# --------------------------------------------------------------------------- #
-# Churches — Kraków is a city of churches.                                    #
-# --------------------------------------------------------------------------- #
-
-
-class Churches(WikiImages, CategoryProvider):
-    key = "culture:churches"
-    override_name = True
-    light_bg = True
-    items = [
-        "Wawel Cathedral",
-        "Church of Saints Peter and Paul",
-        "Church of St. Adalbert",
-        "St. Andrew's Church",
-        "Skałka",
-        "Corpus Christi Basilica",
-        "St. Anne's Church",
-        "St. Francis of Assisi Basilica",
-    ]
-    queries = {
         "Church of Saints Peter and Paul": "Church of Saints Peter and Paul, Kraków",
         "Church of St. Adalbert": "Church of St. Adalbert, Kraków",
         "St. Andrew's Church": "Church of St. Andrew, Kraków",
         "Corpus Christi Basilica": "Corpus Christi Basilica, Kraków",
         "St. Anne's Church": "St. Anne's Church, Kraków",
         "St. Francis of Assisi Basilica": "Church of St. Francis of Assisi, Kraków",
-    }
-
-
-# --------------------------------------------------------------------------- #
-# Museums.                                                                     #
-# --------------------------------------------------------------------------- #
-
-
-class Museums(WikiImages, CategoryProvider):
-    key = "culture:museums"
-    override_name = True
-    items = [
-        "Rynek Underground",
-        "National Museum",
-        "Czartoryski Museum",
-        "MOCAK",
-        "Ethnographic Museum",
-        "Polish Aviation Museum",
-        "Manggha",
-    ]
-    queries = {
         "National Museum": "National Museum, Kraków",
         "Ethnographic Museum": "Ethnographic Museum in Kraków",
     }
 
 
 # --------------------------------------------------------------------------- #
-# Districts — the neighbourhoods of the city.                                 #
+# Districts — always shown as a locator map highlighting the area on the city, #
+# so the game is "place the district" rather than "recognise a street photo".  #
 # --------------------------------------------------------------------------- #
 
 
-class Districts(WikiImages, CategoryProvider):
+class Districts(CategoryProvider):
     key = "geography:districts"
     override_name = True
+    light_bg = True
     items = [
         "Old Town",
         "Kazimierz",
@@ -167,10 +143,36 @@ class Districts(WikiImages, CategoryProvider):
         "Zwierzyniec",
         "Krowodrza",
     ]
-    queries = {
-        "Old Town": "Kraków Old Town",
-        "Zwierzyniec": "Zwierzyniec, Kraków",
+    # Wikimedia Commons locator maps (SIM areas of Kraków).
+    maps = {
+        "Old Town": "Obszar SIM Krakowa – Stare Miasto.svg",
+        "Kazimierz": "Obszar SIM Krakowa – Kazimierz.svg",
+        "Podgórze": "Obszar SIM Krakowa – Stare Podgórze.svg",
+        "Nowa Huta": "Obszar SIM Krakowa – Nowa Huta.svg",
+        "Kleparz": "Obszar SIM Krakowa – Kleparz.svg",
+        "Zwierzyniec": "Obszar SIM Krakowa – Zwierzyniec.svg",
+        "Krowodrza": "Obszar SIM Krakowa – Krowodrza.svg",
     }
+    # Wikipedia article titles for the "know more" link.
+    wiki = {
+        "Old Town": "Kraków Old Town",
+        "Kazimierz": "Kazimierz",
+        "Podgórze": "Podgórze",
+        "Nowa Huta": "Nowa Huta",
+        "Kleparz": "Kleparz",
+        "Zwierzyniec": "Zwierzyniec, Kraków",
+        "Krowodrza": "Krowodrza",
+    }
+
+    def get_image(self, item):
+        result = images.get_commons_file_image(self.maps[item])
+        if not result:
+            return None
+        result = dict(result)
+        result["name"] = item
+        title = self.wiki.get(item, item)
+        result["url"] = f"https://en.wikipedia.org/wiki/{quote(title.replace(' ', '_'))}"
+        return result
 
 
 # --------------------------------------------------------------------------- #
@@ -228,10 +230,8 @@ class People(WikiImages, CategoryProvider):
 
 
 PROVIDERS = [
-    Museums(),
-    Churches(),
+    Sights(),
     Food(),
-    Landmarks(),
     Districts(),
     People(),
 ]

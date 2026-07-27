@@ -7,12 +7,12 @@ Live at [kr.memi.click](https://kr.memi.click)
 
 ## Categories
 
-- **culture → museums** — 7 museums (Rynek Underground, Czartoryski, MOCAK, Manggha…)
-- **culture → churches** — 8 of Kraków's historic churches
+- **culture → sights** — 29 landmarks, churches and museums (Wawel, St. Mary's,
+  the Cloth Hall, Rynek Underground, MOCAK…)
 - **culture → food** — 10 Kraków and Polish classics (obwarzanek, zapiekanka, pierogi…)
-- **culture → landmarks** — 14 iconic sights (Wawel, St. Mary's, the Cloth Hall…)
-- **geography → districts** — 7 neighbourhoods (Kazimierz, Podgórze, Nowa Huta…)
-- **people** — 10 famous cracovians, tagged with what they're known for
+- **geography → districts** — 7 neighbourhoods, each shown as a locator map
+  highlighting it on the city (Kazimierz, Podgórze, Nowa Huta…)
+- **people** — 9 famous cracovians, tagged with what they're known for
 
 Images and *know more* links resolve from Wikipedia automatically. A small
 `WikiImages` mixin relaxes the engine's strict title lookup — following
