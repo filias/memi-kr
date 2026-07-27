@@ -395,7 +395,7 @@ def _text_card(text):
         '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" '
         'viewBox="0 0 640 420">'
         '<rect width="640" height="420" fill="#f7f5f0"/>'
-        f'<text x="320" y="215" text-anchor="middle" dominant-baseline="middle" '
+        f'<text x="320" y="140" text-anchor="middle" dominant-baseline="middle" '
         f"font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"{size}\" "
         f'fill="#223344">{safe}</text>'
         "</svg>"
