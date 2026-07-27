@@ -122,6 +122,23 @@ class Sights(WikiImages, CategoryProvider):
         "National Museum": "National Museum, Kraków",
         "Ethnographic Museum": "Ethnographic Museum in Kraków",
     }
+    # Items whose Wikipedia lead image is a logo (or otherwise poor) — pin a
+    # Wikimedia Commons photo of the actual building instead.
+    files = {
+        "National Museum": "National Museum, Main Building, 1 May, 3 Avenue, Kraków, Poland.jpg",
+    }
+
+    def get_image(self, item):
+        filename = self.files.get(item)
+        if filename:
+            result = images.get_commons_file_image(filename)
+            if result:
+                result = dict(result)
+                result["name"] = item
+                title = self.queries.get(item, item)
+                result["url"] = f"https://en.wikipedia.org/wiki/{quote(title.replace(' ', '_'))}"
+                return result
+        return super().get_image(item)
 
 
 # --------------------------------------------------------------------------- #
