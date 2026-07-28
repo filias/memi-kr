@@ -60,6 +60,19 @@ _LANDING_JS = """
 </script>
 """ % json.dumps(CATEGORY_SLUGS)
 
+# --------------------------------------------------------------------------- #
+# Analytics — GoatCounter (privacy-friendly, no cookies).                      #
+# kr has its own GoatCounter site so its stats stay separate from the other    #
+# memi games; the pretty landing paths (/food, /people, …) show up as their    #
+# own pages in the dashboard.                                                   #
+# --------------------------------------------------------------------------- #
+
+GOATCOUNTER_CODE = "memi-kr"
+_GOATCOUNTER_JS = (
+    f'<script data-goatcounter="https://{GOATCOUNTER_CODE}.goatcounter.com/count"'
+    ' async src="//gc.zgo.at/count.js"></script>\n'
+)
+
 config = MemiConfig(
     title="memi kraków",
     subtitle="name the sights, food and people of Kraków",
@@ -97,8 +110,9 @@ config = MemiConfig(
         more durable memory than re-exposure alone, and because each prompt is a
         picture it also leans on the <em>picture superiority effect</em>.</p>
     """,
-    # Injected at the bottom of every page (after the engine's app.js loads).
-    analytics_html=_LANDING_JS,
+    # Injected at the bottom of every page (after the engine's app.js loads):
+    # GoatCounter analytics + the shareable-landing bootstrap.
+    analytics_html=_GOATCOUNTER_JS + _LANDING_JS,
 )
 
 app = create_app(config)
