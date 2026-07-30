@@ -18,6 +18,7 @@ _GOATCOUNTER_JS = (
 )
 
 config = MemiConfig(
+    default_category="culture:sights",
     title="memi kraków",
     subtitle="name the sights, food and people of Kraków",
     wikipedia_lang="en",
