@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
     "flask>=3.0",
     "gunicorn>=22",
-    "memi-engine>=0.1.1",
+    "memi-engine>=0.2.0",
 ]
 
 [project.optional-dependencies]
