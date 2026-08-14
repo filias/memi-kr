@@ -26,12 +26,12 @@ config = MemiConfig(
     sponsor_url="https://github.com/sponsors/filias",
     sponsor_text="sponsor",
     related_sites=[
-        {"name": "memi", "url": "https://memi.click"},
-        {"name": "memi portugal", "url": "https://pt.memi.click"},
-        {"name": "memi lisboa", "url": "https://lx.memi.click"},
-        {"name": "memi slovensko", "url": "https://sk.memi.click"},
-        {"name": "memi US", "url": "https://us.memi.click"},
-        {"name": "memi pyrenees", "url": "https://py.memi.click"},
+        {"name": "memi", "url": "https://world.memi.games"},
+        {"name": "memi portugal", "url": "https://pt.memi.games"},
+        {"name": "memi lisboa", "url": "https://lx.memi.games"},
+        {"name": "memi slovensko", "url": "https://sk.memi.games"},
+        {"name": "memi united states", "url": "https://us.memi.games"},
+        {"name": "memi pyrenees", "url": "https://py.memi.games"},
     ],
     about_html="""
         <p>memi kraków is a memory practice game about Kraków, Poland's old
