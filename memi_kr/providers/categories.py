@@ -7,7 +7,9 @@ and falls back to a search when the exact title has no lead image.
 """
 
 import base64
+import unicodedata
 from functools import lru_cache
+from pathlib import Path
 from urllib.parse import quote
 
 import requests
@@ -418,6 +420,120 @@ class Language(CategoryProvider):
         }
 
 
+# --------------------------------------------------------------------------- #
+# Marta's tips — a local's battle-tested favourites in Kazimierz and around    #
+# the Rynek. Tag = area + Marta's note; "know more" opens the venue's own page. #
+# Most venues have no Wikipedia article, so images are pinned Commons photos;  #
+# a file in static/tips/<slug>.jpg takes precedence (and is the only source    #
+# for venues with no Commons photo — those are skipped until one is added).    #
+# --------------------------------------------------------------------------- #
+
+TIPS_DIR = Path(__file__).resolve().parent.parent / "static" / "tips"
+_PHOTO_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
+
+TIPS = {
+    # name: (area, Marta's note, link, Commons file or None)
+    "Kazimierz": (
+        "Kazimierz",
+        "the old Jewish district and the coolest place to be — most locals "
+        "hang out here, and it's full of vintage shops",
+        "https://en.wikipedia.org/wiki/Kazimierz",
+        "Szeroka street,Kazimierz,Krakow,Poland.jpg",
+    ),
+    "Klezmer-Hois": (
+        "Kazimierz",
+        "Jewish food in Kazimierz",
+        "https://klezmer.pl/klezmer-hois/",
+        "KRAKÓW, AB. 126.JPG",
+    ),
+    "Hevre": (
+        "Kazimierz",
+        "café, restaurant and bar in an old prayer house — hevre means "
+        "'friends' in Hebrew",
+        "https://www.inyourpocket.com/poland/krakow/venues/hevre",
+        "Hevre Tehilim Synagogue, interior, 18 Dow Ber Meisels Street, "
+        "Kazimierz, Kraków, Poland.jpg",
+    ),
+    "Metal Wino": (
+        "Kazimierz",
+        "Hevre's tiny partner in crime next door — really great wine, and "
+        "the food comes from Hevre",
+        "https://www.wixcityguides.com/guide/krakow/food-%26-dining/wino-metal",
+        None,
+    ),
+    "Okrąglak": (
+        "Kazimierz",
+        "for something quick — get a zapiekanka, they're huge",
+        "https://www.wixcityguides.com/guide/krakow/food-%26-dining/okr%C4%85glak",
+        "PlacNowy-Okrąglak-POL, Kraków.jpg",
+    ),
+    "Judah Food Market": (
+        "Kazimierz",
+        "food court with pierogi, kumpir, zapiekanka and coffee — you sit "
+        "outside, so bring warm clothes",
+        "https://www.instagram.com/judahfoodmarket/",
+        None,
+    ),
+    "Bunkier Cafe": (
+        "Rynek",
+        "glass-walled café on the Planty, reopened after years — good coffee "
+        "and breakfasts, next to the art gallery",
+        "https://www.instagram.com/cafebunkier/",
+        "Bunkier Cafe, Kraków, 2024, 01.jpg",
+    ),
+    "Nowa Prowincja": (
+        "Rynek",
+        "another iconic bar and coffee shop",
+        "https://karnet.krakowculture.pl/531-krakow-nowa-prowincja",
+        "Nowa Prowincja Kraków.jpg",
+    ),
+    "Kino Pod Baranami": (
+        "Rynek",
+        "a beautiful old cinema — catch Lalka in the small Red Room, with "
+        "its wooden ceiling and red chairs",
+        "https://www.kinopodbaranami.pl/english.php",
+        "Kraków, Pałac Pod Baranami w Krakowie.jpg",
+    ),
+}
+
+
+def tip_slug(name):
+    """``"Judah Food Market"`` -> ``"judah-food-market"`` (local photo filename)."""
+    ascii_name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return "-".join(ascii_name.lower().split())
+
+
+class MartasTips(CategoryProvider):
+    key = "marta's tips"
+    override_name = True
+    tag_style = "plain"
+    items = list(TIPS)
+
+    def get_image(self, item):
+        _area, _note, link, commons_file = TIPS[item]
+        slug = tip_slug(item)
+        local = next(
+            (p for p in sorted(TIPS_DIR.glob(f"{slug}.*")) if p.suffix.lower() in _PHOTO_EXTS),
+            None,
+        )
+        if local:
+            result = {"image": f"/static/tips/{local.name}"}
+        elif commons_file:
+            result = images.get_commons_file_image(commons_file)
+            if not result:
+                return None
+            result = dict(result)
+        else:
+            return None
+        result["name"] = item
+        result["url"] = link
+        return result
+
+    def get_tag(self, item):
+        area, note, _link, _file = TIPS[item]
+        return f"{area} · {note}"
+
+
 PROVIDERS = [
     Sights(),
     Food(),
@@ -426,6 +542,7 @@ PROVIDERS = [
     Green(),
     People(),
     Language(),
+    MartasTips(),
 ]
 for _provider in PROVIDERS:
     register(_provider)

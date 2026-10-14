@@ -18,6 +18,7 @@ def test_expected_category_keys():
         "geography:green",
         "people",
         "language",
+        "marta's tips",
     }
 
 
@@ -53,3 +54,21 @@ def test_people_tags():
     people = cat.People()
     for item in people.items:
         assert people.get_tag(item), f"missing tag for {item}"
+
+
+def test_marta_tips_have_area_and_link():
+    tips = cat.MartasTips()
+    for item in tips.items:
+        area, note, link, _file = cat.TIPS[item]
+        assert area in {"Kazimierz", "Rynek"}, f"{item} has an unknown area"
+        assert note, f"{item} has no note"
+        assert link.startswith("https://"), f"{item} has no link"
+        assert tips.get_tag(item).startswith(area)
+
+
+def test_marta_tips_prefer_local_photo(tmp_path, monkeypatch):
+    (tmp_path / "metal-wino.JPG").write_bytes(b"")
+    monkeypatch.setattr(cat, "TIPS_DIR", tmp_path)
+    r = cat.MartasTips().get_image("Metal Wino")
+    assert r["image"] == "/static/tips/metal-wino.JPG"
+    assert r["url"] == cat.TIPS["Metal Wino"][2]

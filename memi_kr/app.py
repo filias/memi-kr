@@ -1,5 +1,7 @@
 """memi kraków — practise your memory of Kraków."""
 
+from pathlib import Path
+
 from memi_engine import MemiConfig, create_app
 
 import memi_kr.providers  # noqa: F401  (import registers the providers)
@@ -59,7 +61,8 @@ config = MemiConfig(
     analytics_html=_GOATCOUNTER_JS,
 )
 
-app = create_app(config)
+# static/ holds photos for cards with no usable Commons image (Marta's tips).
+app = create_app(config, instance_static=str(Path(__file__).parent / "static"))
 
 if __name__ == "__main__":
     app.run(debug=True, port=8091)
