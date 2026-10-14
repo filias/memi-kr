@@ -19,7 +19,7 @@ Live at [kr.memi.click](https://kr.memi.click)
 - **people** — 9 famous cracovians, tagged with what they're known for
 - **language** — 20 everyday phrases: read the English, reveal the Polish
   (the prompt is a rendered text card, not a photo)
-- **marta's tips** — a local's battle-tested favourites in Kazimierz and
+- **marta’s tips** — a local's battle-tested favourites in Kazimierz and
   around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…); the
   tag carries Marta's note and *know more* opens the venue's own page.
   Venues have pinned Commons photos; drop a photo at

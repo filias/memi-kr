@@ -18,7 +18,7 @@ def test_expected_category_keys():
         "geography:green",
         "people",
         "language",
-        "marta's tips",
+        "marta’s tips",
     }
 
 

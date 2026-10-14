@@ -504,7 +504,7 @@ def tip_slug(name):
 
 
 class MartasTips(CategoryProvider):
-    key = "marta's tips"
+    key = "marta’s tips"
     override_name = True
     tag_style = "plain"
     items = list(TIPS)
