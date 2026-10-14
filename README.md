@@ -12,8 +12,11 @@ Live at [kr.memi.click](https://kr.memi.click)
 - **culture → food** — 10 Kraków and Polish classics (obwarzanek, zapiekanka, pierogi…)
 - **culture → folklore** — 5 legends and folk traditions (the Wawel Dragon,
   Pan Twardowski, Lajkonik, the szopka, the Sigismund Bell)
-- **geography → districts** — 7 neighbourhoods, each shown as a locator map
-  highlighting it on the city (Kazimierz, Podgórze, Nowa Huta…)
+- **geography → districts** — 12 neighbourhoods (Kazimierz, Podgórze, Nowa
+  Huta, Tyniec, Łagiewniki…), each a photo of the place with a locator-map
+  inset zoomed around it. The cards are prebuilt by
+  `uv run --with pillow python scripts/build_district_cards.py` into
+  `memi_kr/static/districts/` (credits in `CREDITS.md` there)
 - **geography → green** — 6 green spaces and the river (Vistula, Błonia, the
   Botanical Garden, Kraków Zoo…)
 - **people** — 9 famous cracovians, tagged with what they're known for

@@ -45,10 +45,14 @@ def test_every_sight_has_a_date():
         assert s.get_tag(item), f"sight {item} has no date"
 
 
-def test_districts_use_maps():
+def test_every_district_has_a_prebuilt_card_and_credits():
     d = cat.Districts()
+    credits = (cat.DISTRICTS_DIR / "CREDITS.md").read_text()
     for item in d.items:
-        assert item in d.maps, f"district {item} has no locator map"
+        card = cat.DISTRICTS_DIR / f"{cat.district_slug(item)}.jpg"
+        assert card.exists(), f"{item}: run scripts/build_district_cards.py"
+        assert d.get_image(item)["image"] == f"/static/districts/{card.name}"
+        assert f"`{card.name}`" in credits, f"{item} missing from CREDITS.md"
 
 
 def test_no_empty_or_duplicate_items():

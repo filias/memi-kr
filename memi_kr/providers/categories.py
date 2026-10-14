@@ -363,53 +363,113 @@ class Sights(WikiDetails, WikiImages, CategoryProvider):
 
 
 # --------------------------------------------------------------------------- #
-# Districts — always shown as a locator map highlighting the area on the city, #
-# so the game is "place the district" rather than "recognise a street photo".  #
+# Districts — a photo of the place with a locator-map inset, zoomed around the #
+# district, in the corner: what it looks like and roughly where it is. The     #
+# composites are prebuilt by scripts/build_district_cards.py into              #
+# static/districts/ (credits alongside); a district without one falls back to  #
+# the bare locator map.                                                        #
 # --------------------------------------------------------------------------- #
+
+DISTRICTS_DIR = Path(__file__).resolve().parent.parent / "static" / "districts"
+
+DISTRICTS = {
+    # name: SIM-area locator map (Commons "Obszar SIM Krakowa – <area>.svg"),
+    # Wikipedia article, Commons photo.
+    "Old Town": {
+        "area": "Stare Miasto",
+        "wiki": "Kraków Old Town",
+        "photo": "Floriańska Street in Kraków, 2024 (01).jpg",
+    },
+    "Kazimierz": {
+        "area": "Kazimierz",
+        "wiki": "Kazimierz",
+        "photo": "Szeroka Street in Kraków, 2024 (01).jpg",
+    },
+    "Podgórze": {
+        "area": "Stare Podgórze",
+        "wiki": "Podgórze",
+        "photo": "Podgórze Market Square in Kraków 1.jpg",
+    },
+    "Nowa Huta": {
+        "area": "Nowa Huta",
+        "wiki": "Nowa Huta",
+        "photo": "Nowa Huta - Plac Centralny z lotu ptaka.jpg",
+    },
+    "Kleparz": {
+        "area": "Kleparz",
+        "wiki": "Kleparz",
+        "photo": "2019-07-06 Market Square in Kleparz, Kraków 1.jpg",
+    },
+    "Zwierzyniec": {
+        "area": "Zwierzyniec",
+        "wiki": "Zwierzyniec, Kraków",
+        "photo": (
+            "Church of St. Augustine and St. John the Baptist and Norbertine "
+            "Sisters monastery, 88 Kościuszki Street, Kraków, Poland.jpg"
+        ),
+    },
+    "Krowodrza": {
+        "area": "Krowodrza",
+        "wiki": "Krowodrza",
+        "photo": "Inwalidów square, view from E, Kraków, Poland.jpg",
+    },
+    "Dębniki": {
+        "area": "Dębniki",
+        "wiki": "Dębniki, Kraków",
+        "photo": "Dębniki, rynek.jpg",
+    },
+    "Grzegórzki": {
+        "area": "Grzegórzki",
+        "wiki": "Grzegórzki, Kraków (district)",
+        "photo": (
+            "Church of StCasimir Jagiellon, 78 Grzegórzecka street,Grzegorzki,"
+            "Krakow,Poland.jpg"
+        ),
+    },
+    "Płaszów": {
+        "area": "Płaszów",
+        "wiki": "Płaszów",
+        "photo": "Memorial walk at Płaszów concentration camp (1490981767).jpg",
+    },
+    "Tyniec": {
+        "area": "Tyniec",
+        "wiki": "Tyniec",
+        "photo": "20200529 Widok ze Skały Okrążek na Opactwo w Tyńcu 1735 2128.jpg",
+    },
+    "Łagiewniki": {
+        "area": "Łagiewniki",
+        "wiki": "Łagiewniki-Borek Fałęcki",
+        "photo": "Church of Divine Mercy, 3 Siostry Faustyny street, Łagiewniki, Kraków Poland.jpg",
+    },
+}
+
+
+def district_slug(name):
+    """``"Łagiewniki"`` -> ``"lagiewniki"`` (composite filename)."""
+    folded = unicodedata.normalize("NFKD", name.replace("ł", "l").replace("Ł", "L"))
+    return "-".join(folded.encode("ascii", "ignore").decode().lower().split())
 
 
 class Districts(WikiDetails, CategoryProvider):
     key = "geography:districts"
     map_zoom = 14
     override_name = True
-    light_bg = True
-    items = [
-        "Old Town",
-        "Kazimierz",
-        "Podgórze",
-        "Nowa Huta",
-        "Kleparz",
-        "Zwierzyniec",
-        "Krowodrza",
-    ]
-    # Wikimedia Commons locator maps (SIM areas of Kraków).
-    maps = {
-        "Old Town": "Obszar SIM Krakowa – Stare Miasto.svg",
-        "Kazimierz": "Obszar SIM Krakowa – Kazimierz.svg",
-        "Podgórze": "Obszar SIM Krakowa – Stare Podgórze.svg",
-        "Nowa Huta": "Obszar SIM Krakowa – Nowa Huta.svg",
-        "Kleparz": "Obszar SIM Krakowa – Kleparz.svg",
-        "Zwierzyniec": "Obszar SIM Krakowa – Zwierzyniec.svg",
-        "Krowodrza": "Obszar SIM Krakowa – Krowodrza.svg",
-    }
-    # Wikipedia article titles for the "know more" link.
-    wiki = {
-        "Old Town": "Kraków Old Town",
-        "Kazimierz": "Kazimierz",
-        "Podgórze": "Podgórze",
-        "Nowa Huta": "Nowa Huta",
-        "Kleparz": "Kleparz",
-        "Zwierzyniec": "Zwierzyniec, Kraków",
-        "Krowodrza": "Krowodrza",
-    }
+    items = list(DISTRICTS)
 
     def get_image(self, item):
-        result = images.get_commons_file_image(self.maps[item])
-        if not result:
-            return None
-        result = dict(result)
+        district = DISTRICTS[item]
+        composite = DISTRICTS_DIR / f"{district_slug(item)}.jpg"
+        if composite.exists():
+            result = {"image": f"/static/districts/{composite.name}"}
+        else:
+            result = images.get_commons_file_image(
+                f"Obszar SIM Krakowa – {district['area']}.svg"
+            )
+            if not result:
+                return None
+            result = dict(result)
         result["name"] = item
-        title = self.wiki.get(item, item)
+        title = district["wiki"]
         result["url"] = f"https://en.wikipedia.org/wiki/{quote(title.replace(' ', '_'))}"
         return result
 
