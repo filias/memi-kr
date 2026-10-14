@@ -27,6 +27,8 @@ config = MemiConfig(
     subtitle="name the sights, food and people of Kraków",
     wikipedia_lang="en",
     favicon_color="#2a5caa",
+    # Link-preview image for Slack, WhatsApp, etc. (1200×630, static/og.png).
+    og_image="https://kr.memi.games/static/og.png",
     sponsor_url="https://github.com/sponsors/filias",
     sponsor_text="sponsor",
     related_sites=[

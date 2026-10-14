@@ -8,6 +8,15 @@ def test_app_builds():
     assert app_module.app is not None
 
 
+def test_link_preview_image_is_served():
+    client = app_module.app.test_client()
+    page = client.get("/").get_data(as_text=True)
+    assert '<meta property="og:image" content="https://kr.memi.games/static/og.png">' in page
+    assert 'content="summary_large_image"' in page
+    resp = client.get("/static/og.png")
+    assert resp.status_code == 200 and resp.mimetype == "image/png"
+
+
 def test_expected_category_keys():
     keys = {p.key for p in cat.PROVIDERS}
     assert keys == {
