@@ -871,6 +871,17 @@ TIPS = {
         "photo": None,
         "pin": (50.0502904, 19.9485371, 17),
     },
+    "Lokator": {
+        "area": "Kazimierz",
+        "tag": "bookshop for book lovers",
+        "text": (
+            "One more tip for book lovers :) A bookshop and publisher — they've "
+            "got kids' books as well, and in English."
+        ),
+        "link": "https://lokatormedia.pl/",
+        "photo": None,
+        "pin": (50.0480823, 19.9453272, 17),
+    },
     "Bunkier Cafe": {
         "area": "Rynek",
         "tag": "glass café on the Planty",
