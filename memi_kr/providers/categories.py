@@ -10,7 +10,7 @@ import base64
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import requests
 from memi_engine import CategoryProvider, images, register
@@ -65,6 +65,97 @@ class WikiImages:
         return wiki_image(self.queries.get(item, item))
 
 
+# Rough bounding box of Kraków. Wikipedia coordinates outside it belong to
+# something other than the place on the card (the Vistula's are its mouth on
+# the Baltic), so they get no map.
+KRAKOW_BBOX = {"lat": (49.96, 50.13), "lon": (19.79, 20.22)}
+
+
+_coords_cache = {}
+
+
+def wiki_coords(title, lang=WIKIPEDIA_LANG):
+    """Coordinates of the article's Wikidata item as ``(lat, lon)``, or ``None``.
+
+    Wikidata rather than Wikipedia's own coordinates: those are often only
+    "secondary" (absent from the default API answer) and sometimes plain wrong
+    (MOCAK's sit 25 km west of the city).
+
+    Answers are cached, including "no coordinates"; failed requests are not, so
+    a network blip doesn't hide a card's map for good.
+    """
+    key = (title, lang)
+    if key in _coords_cache:
+        return _coords_cache[key]
+    try:
+        resp = requests.get(
+            f"https://{lang}.wikipedia.org/w/api.php",
+            params={
+                "action": "query",
+                "format": "json",
+                "prop": "pageprops",
+                "ppprop": "wikibase_item",
+                "redirects": 1,
+                "titles": title,
+            },
+            headers=_WIKI_UA,
+            timeout=5,
+        )
+        resp.raise_for_status()
+        pages = resp.json()["query"]["pages"]
+        qid = next(
+            (p["pageprops"]["wikibase_item"] for p in pages.values() if "pageprops" in p),
+            None,
+        )
+        coords = None
+        if qid:
+            resp = requests.get(
+                "https://www.wikidata.org/w/api.php",
+                params={
+                    "action": "wbgetclaims",
+                    "format": "json",
+                    "entity": qid,
+                    "property": "P625",
+                },
+                headers=_WIKI_UA,
+                timeout=5,
+            )
+            resp.raise_for_status()
+            claims = resp.json()["claims"].get("P625", [])
+            if claims:
+                value = claims[0]["mainsnak"]["datavalue"]["value"]
+                coords = (value["latitude"], value["longitude"])
+    except Exception:
+        return None
+    _coords_cache[key] = coords
+    return coords
+
+
+class WikiMap:
+    """Mixin: a map pin in the details panel, from the card's Wikipedia article.
+
+    The article is whatever the card's "know more" link points at, so it
+    follows each provider's own title resolution (queries, pinned files, …).
+    """
+
+    map_zoom = 16
+
+    def get_details(self, item):
+        result = self.get_image(item)
+        url = (result or {}).get("url", "")
+        if "/wiki/" not in url:
+            return None
+        title = unquote(url.rsplit("/wiki/", 1)[1]).replace("_", " ")
+        coords = wiki_coords(title)
+        if not coords:
+            return None
+        lat, lon = coords
+        (lat_min, lat_max), (lon_min, lon_max) = KRAKOW_BBOX["lat"], KRAKOW_BBOX["lon"]
+        if not (lat_min <= lat <= lat_max and lon_min <= lon <= lon_max):
+            return None
+        return {"map": {"lat": lat, "lon": lon, "zoom": self.map_zoom}}
+
+
 # --------------------------------------------------------------------------- #
 # Sights — landmarks, churches and museums, all the great things to see.       #
 # --------------------------------------------------------------------------- #
@@ -117,7 +208,7 @@ SIGHT_DATES = {
 }
 
 
-class Sights(WikiImages, CategoryProvider):
+class Sights(WikiMap, WikiImages, CategoryProvider):
     key = "culture:sights"
     override_name = True
     tag_style = "plain"
@@ -216,8 +307,9 @@ class Sights(WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Districts(CategoryProvider):
+class Districts(WikiMap, CategoryProvider):
     key = "geography:districts"
+    map_zoom = 14
     override_name = True
     light_bg = True
     items = [
@@ -294,7 +386,7 @@ class Food(WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Folklore(WikiImages, CategoryProvider):
+class Folklore(WikiMap, WikiImages, CategoryProvider):
     key = "culture:folklore"
     override_name = True
     items = [
@@ -342,8 +434,9 @@ class People(WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Green(WikiImages, CategoryProvider):
+class Green(WikiMap, WikiImages, CategoryProvider):
     key = "geography:green"
+    map_zoom = 15
     override_name = True
     items = [
         "Vistula",
@@ -450,7 +543,7 @@ TIPS = {
             "For fashion aficionados, there are looooots of vintage shops."
         ),
         "link": "https://en.wikipedia.org/wiki/Kazimierz",
-        "photo": "Szeroka street,Kazimierz,Krakow,Poland.jpg",
+        "photo": "Szeroka Street in Kraków, 2024 (01).jpg",
         "pin": (50.0531122, 19.9473440, 15),
     },
     "Klezmer-Hois": {

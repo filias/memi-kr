@@ -86,3 +86,26 @@ def test_marta_tips_prefer_local_photo(tmp_path, monkeypatch):
     r = cat.MartasTips().get_image("Metal Wino")
     assert r["image"] == "/static/tips/metal-wino.JPG"
     assert r["url"] == cat.TIPS["Metal Wino"]["link"]
+
+
+def test_maps_only_for_places_inside_krakow(monkeypatch):
+    # The Vistula's Wikidata point is its mouth on the Baltic: no map.
+    monkeypatch.setattr(cat, "wiki_coords", lambda title: (54.36, 18.95))
+    monkeypatch.setattr(
+        cat.Green, "get_image", lambda self, item: {"url": "https://en.wikipedia.org/wiki/Vistula"}
+    )
+    assert cat.Green().get_details("Vistula") is None
+    monkeypatch.setattr(cat, "wiki_coords", lambda title: (50.0544, 19.9366))
+    assert cat.Green().get_details("Vistula") == {
+        "map": {"lat": 50.0544, "lon": 19.9366, "zoom": cat.Green.map_zoom}
+    }
+
+
+def test_coords_failures_are_not_cached(monkeypatch):
+    def boom(*a, **k):
+        raise OSError("network down")
+
+    monkeypatch.setattr(cat.requests, "get", boom)
+    cat._coords_cache.clear()
+    assert cat.wiki_coords("Wawel Castle") is None
+    assert ("Wawel Castle", "en") not in cat._coords_cache
