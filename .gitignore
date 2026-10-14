@@ -9,3 +9,6 @@ dist/
 .ruff_cache/
 excluded_items.txt
 reported_items.log
+
+# Raw voice memos (imported as MP3s into memi_kr/static/audio/)
+recordings/
