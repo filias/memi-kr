@@ -41,16 +41,38 @@ config = MemiConfig(
     ],
     about_html="""
         <p>memi kraków is a memory practice game about Kraków, Poland's old
-        royal capital. Landmarks, churches, districts, food and famous
-        cracovians &mdash; there's always something to remember.</p>
+        royal capital: its sights, districts, food, legends, famous cracovians
+        and everyday Polish &mdash; plus Marta's favourite places.</p>
+
+        <h2>What's inside</h2>
+        <ul>
+            <li><strong>culture:</strong> landmarks, churches, museums and
+            synagogues with their dates, Kraków food, and the city's legends.</li>
+            <li><strong>geography:</strong> districts, each a photo with a small
+            map of where it is, and the city's parks and green spaces.</li>
+            <li><strong>people:</strong> famous cracovians and what ties them to
+            the city.</li>
+            <li><strong>language:</strong> everyday phrases &mdash; read the
+            English, say the Polish, then listen to how it sounds.</li>
+            <li><strong>marta&rsquo;s tips:</strong> battle-tested cafés, bars,
+            food and a cinema in Kazimierz and around the Rynek, from
+            Marta.</li>
+        </ul>
 
         <h2>How to play</h2>
         <p>Pick a category, look at the image, and try to name it before
         revealing the answer. No accounts, no scores, no time limits.</p>
         <ul>
             <li><strong>clues:</strong> toggle progressive letter hints.</li>
-            <li><strong>know more:</strong> appears on reveal and opens the
-            Wikipedia article for the item.</li>
+            <li><strong>on reveal:</strong> a panel beside the card (below it on
+            phones) tells you more and pins the place on a map.</li>
+            <li><strong>listen:</strong> on language cards, the speaker button
+            says the Polish out loud.</li>
+            <li><strong>know more:</strong> opens the Wikipedia article &mdash;
+            or, for Marta's tips, the place's own page.</li>
+            <li><strong>share:</strong> the address bar always holds a link to
+            the category you're playing, e.g.
+            <a href="/martas-tips">kr.memi.games/martas-tips</a>.</li>
             <li><strong>report:</strong> flag a card if the image doesn't match
             the answer.</li>
         </ul>
@@ -60,6 +82,15 @@ config = MemiConfig(
         name out of memory instead of re-reading it. Retrieval practice builds
         more durable memory than re-exposure alone, and because each prompt is a
         picture it also leans on the <em>picture superiority effect</em>.</p>
+
+        <h2>Credits</h2>
+        <p>Photos from <a href="https://commons.wikimedia.org/">Wikimedia
+        Commons</a> and descriptions from
+        <a href="https://www.wikipedia.org/">Wikipedia</a>, under their
+        Creative Commons licences (district photo credits are listed
+        <a href="https://github.com/filias/memi-kr/blob/main/memi_kr/static/districts/CREDITS.md">here</a>).
+        Maps &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+        contributors. Tips by Marta.</p>
     """,
     # Injected at the bottom of every page (after the engine's app.js loads).
     analytics_html=_GOATCOUNTER_JS,
