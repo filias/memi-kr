@@ -56,14 +56,19 @@ def test_people_tags():
         assert people.get_tag(item), f"missing tag for {item}"
 
 
-def test_marta_tips_have_area_and_link():
+def test_marta_tips_have_details():
     tips = cat.MartasTips()
     for item in tips.items:
-        area, note, link, _file = cat.TIPS[item]
-        assert area in {"Kazimierz", "Rynek"}, f"{item} has an unknown area"
-        assert note, f"{item} has no note"
-        assert link.startswith("https://"), f"{item} has no link"
-        assert tips.get_tag(item).startswith(area)
+        tip = cat.TIPS[item]
+        assert tip["area"] in cat.AREAS, f"{item} has an unknown area"
+        assert tip["link"].startswith("https://"), f"{item} has no link"
+        assert tips.get_tag(item).startswith(tip["area"])
+        details = tips.get_details(item)
+        assert details["text"], f"{item} has no text"
+        assert details["area"]["url"].startswith("https://")
+        # pins must land in central Kraków
+        assert 50.04 < details["map"]["lat"] < 50.07, item
+        assert 19.92 < details["map"]["lon"] < 19.96, item
 
 
 def test_marta_tips_prefer_local_photo(tmp_path, monkeypatch):
@@ -71,4 +76,4 @@ def test_marta_tips_prefer_local_photo(tmp_path, monkeypatch):
     monkeypatch.setattr(cat, "TIPS_DIR", tmp_path)
     r = cat.MartasTips().get_image("Metal Wino")
     assert r["image"] == "/static/tips/metal-wino.JPG"
-    assert r["url"] == cat.TIPS["Metal Wino"][2]
+    assert r["url"] == cat.TIPS["Metal Wino"]["link"]

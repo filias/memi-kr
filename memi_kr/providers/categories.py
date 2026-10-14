@@ -422,78 +422,135 @@ class Language(CategoryProvider):
 
 # --------------------------------------------------------------------------- #
 # Marta's tips — a local's battle-tested favourites in Kazimierz and around    #
-# the Rynek. Tag = area + Marta's note; "know more" opens the venue's own page. #
+# the Rynek. The card tag is short (area · tag); the enriched layout's details #
+# panel carries Marta's own words, a link to the area and a map pin. "know     #
+# more" opens the venue's own page.                                            #
 # Most venues have no Wikipedia article, so images are pinned Commons photos;  #
-# a file in static/tips/<slug>.jpg takes precedence (and is the only source    #
+# a file in static/tips/<slug>.<ext> takes precedence (and is the only source  #
 # for venues with no Commons photo — those are skipped until one is added).    #
 # --------------------------------------------------------------------------- #
 
 TIPS_DIR = Path(__file__).resolve().parent.parent / "static" / "tips"
 _PHOTO_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 
+AREAS = {
+    "Kazimierz": "https://en.wikipedia.org/wiki/Kazimierz",
+    "Rynek": "https://en.wikipedia.org/wiki/Main_Square,_Krak%C3%B3w",
+}
+
 TIPS = {
-    # name: (area, Marta's note, link, Commons file or None)
-    "Kazimierz": (
-        "Kazimierz",
-        "the old Jewish district and the coolest place to be — most locals "
-        "hang out here, and it's full of vintage shops",
-        "https://en.wikipedia.org/wiki/Kazimierz",
-        "Szeroka street,Kazimierz,Krakow,Poland.jpg",
-    ),
-    "Klezmer-Hois": (
-        "Kazimierz",
-        "Jewish food in Kazimierz",
-        "https://klezmer.pl/klezmer-hois/",
-        "KRAKÓW, AB. 126.JPG",
-    ),
-    "Hevre": (
-        "Kazimierz",
-        "café, restaurant and bar in an old prayer house — hevre means "
-        "'friends' in Hebrew",
-        "https://www.inyourpocket.com/poland/krakow/venues/hevre",
-        "Hevre Tehilim Synagogue, interior, 18 Dow Ber Meisels Street, "
-        "Kazimierz, Kraków, Poland.jpg",
-    ),
-    "Metal Wino": (
-        "Kazimierz",
-        "Hevre's tiny partner in crime next door — really great wine, and "
-        "the food comes from Hevre",
-        "https://www.wixcityguides.com/guide/krakow/food-%26-dining/wino-metal",
-        None,
-    ),
-    "Okrąglak": (
-        "Kazimierz",
-        "for something quick — get a zapiekanka, they're huge",
-        "https://www.wixcityguides.com/guide/krakow/food-%26-dining/okr%C4%85glak",
-        "PlacNowy-Okrąglak-POL, Kraków.jpg",
-    ),
-    "Judah Food Market": (
-        "Kazimierz",
-        "food court with pierogi, kumpir, zapiekanka and coffee — you sit "
-        "outside, so bring warm clothes",
-        "https://www.instagram.com/judahfoodmarket/",
-        None,
-    ),
-    "Bunkier Cafe": (
-        "Rynek",
-        "glass-walled café on the Planty, reopened after years — good coffee "
-        "and breakfasts, next to the art gallery",
-        "https://www.instagram.com/cafebunkier/",
-        "Bunkier Cafe, Kraków, 2024, 01.jpg",
-    ),
-    "Nowa Prowincja": (
-        "Rynek",
-        "another iconic bar and coffee shop",
-        "https://karnet.krakowculture.pl/531-krakow-nowa-prowincja",
-        "Nowa Prowincja Kraków.jpg",
-    ),
-    "Kino Pod Baranami": (
-        "Rynek",
-        "a beautiful old cinema — catch Lalka in the small Red Room, with "
-        "its wooden ceiling and red chairs",
-        "https://www.kinopodbaranami.pl/english.php",
-        "Kraków, Pałac Pod Baranami w Krakowie.jpg",
-    ),
+    # Pins are OpenStreetMap coordinates of the venue (or its address).
+    "Kazimierz": {
+        "area": "Kazimierz",
+        "tag": "the coolest place to be",
+        "text": (
+            "Kraków is special not only because of Poles but also because of "
+            "its long Jewish history, centred in Kazimierz. Most beautiful, "
+            "imho — and nowadays most locals hang out here.\n\n"
+            "For fashion aficionados, there are looooots of vintage shops."
+        ),
+        "link": "https://en.wikipedia.org/wiki/Kazimierz",
+        "photo": "Szeroka street,Kazimierz,Krakow,Poland.jpg",
+        "pin": (50.0531122, 19.9473440, 15),
+    },
+    "Klezmer-Hois": {
+        "area": "Kazimierz",
+        "tag": "Jewish food",
+        "text": "Jewish food in Kazimierz.",
+        "link": "https://klezmer.pl/klezmer-hois/",
+        "photo": "KRAKÓW, AB. 126.JPG",
+        "pin": (50.0532169, 19.9482568, 17),
+    },
+    "Hevre": {
+        "area": "Kazimierz",
+        "tag": "café-bar in an old synagogue",
+        "text": (
+            "Café, restaurant and bar in an old synagogue. Hevre means "
+            "'friends' in Hebrew :)"
+        ),
+        "link": "https://www.inyourpocket.com/poland/krakow/venues/hevre",
+        "photo": (
+            "Hevre Tehilim Synagogue, interior, 18 Dow Ber Meisels Street, "
+            "Kazimierz, Kraków, Poland.jpg"
+        ),
+        "pin": (50.0511806, 19.9433767, 17),
+    },
+    "Metal Wino": {
+        "area": "Kazimierz",
+        "tag": "wine bar next to Hevre",
+        "text": (
+            "Wine bar, a much smaller partner in crime to Hevre :) Really great "
+            "wine, really cool girl working there. They're right next to Hevre "
+            "(you actually go to the toilet in Hevre), and they serve food from "
+            "there as well."
+        ),
+        "link": "https://www.wixcityguides.com/guide/krakow/food-%26-dining/wino-metal",
+        "photo": None,
+        "pin": (50.0511275, 19.9432505, 17),
+    },
+    "Okrąglak": {
+        "area": "Kazimierz",
+        "tag": "get a zapiekanka",
+        "text": (
+            "If you want something quick and fast-foody to eat, you go there. "
+            "You take a zapiekanka — they're pretty huge :D"
+        ),
+        "link": "https://www.wixcityguides.com/guide/krakow/food-%26-dining/okr%C4%85glak",
+        "photo": "PlacNowy-Okrąglak-POL, Kraków.jpg",
+        "pin": (50.0517373, 19.9446185, 17),
+    },
+    "Judah Food Market": {
+        "area": "Kazimierz",
+        "tag": "food court, bring warm clothes",
+        "text": (
+            "Another iconic place in Kazimierz. It's a food court: you can grab "
+            "pierogi, kumpir (a huge potato with stuff, I love it), zapiekanka, "
+            "coffee and more. You sit outside, so grab warm clothes :D"
+        ),
+        "link": "https://www.instagram.com/judahfoodmarket/",
+        "photo": None,
+        "pin": (50.0502904, 19.9485371, 17),
+    },
+    "Bunkier Cafe": {
+        "area": "Rynek",
+        "tag": "glass café on the Planty",
+        "text": (
+            "It's on the Planty, the huge park around the city centre — Planty "
+            "itself is worth a walk. It used to be called Bunkier Sztuki and was "
+            "closed for years; they reopened it two years ago, renovated. It's a "
+            "coffee shop behind glass walls, so you sit inside but feel like "
+            "you're outside. Good coffee, breakfasts, etc. It's right next to "
+            "the art gallery as well."
+        ),
+        "link": "https://www.instagram.com/cafebunkier/",
+        "photo": "Bunkier Cafe, Kraków, 2024, 01.jpg",
+        "pin": (50.0635805, 19.9344469, 17),
+    },
+    "Nowa Prowincja": {
+        "area": "Rynek",
+        "tag": "iconic bar & coffee shop",
+        "text": "Another iconic bar / coffee shop.",
+        "link": "https://karnet.krakowculture.pl/531-krakow-nowa-prowincja",
+        "photo": "Nowa Prowincja Kraków.jpg",
+        "pin": (50.0604258, 19.9361543, 17),
+    },
+    "Kino Pod Baranami": {
+        "area": "Rynek",
+        "tag": "a beautiful old cinema",
+        "text": (
+            "A very beautiful movie theatre. You can watch Lalka there, a Polish "
+            "movie based on Prus's book — one every Pole studied in high school. "
+            "It's what everyone talks about these days: there's a new Netflix "
+            "series and the movie, almost at the same time. I haven't seen the "
+            "movie yet, but I hear it's top notch.\n\n"
+            "One screening room has a decorative wooden ceiling and red chairs, "
+            "and it's quite small. It's called the Red Room — not to be confused "
+            "with redrum from The Shining..."
+        ),
+        "link": "https://www.kinopodbaranami.pl/english.php",
+        "photo": "Kraków, Pałac Pod Baranami w Krakowie.jpg",
+        "pin": (50.0616001, 19.9352018, 17),
+    },
 }
 
 
@@ -510,7 +567,7 @@ class MartasTips(CategoryProvider):
     items = list(TIPS)
 
     def get_image(self, item):
-        _area, _note, link, commons_file = TIPS[item]
+        tip = TIPS[item]
         slug = tip_slug(item)
         local = next(
             (p for p in sorted(TIPS_DIR.glob(f"{slug}.*")) if p.suffix.lower() in _PHOTO_EXTS),
@@ -518,20 +575,29 @@ class MartasTips(CategoryProvider):
         )
         if local:
             result = {"image": f"/static/tips/{local.name}"}
-        elif commons_file:
-            result = images.get_commons_file_image(commons_file)
+        elif tip["photo"]:
+            result = images.get_commons_file_image(tip["photo"])
             if not result:
                 return None
             result = dict(result)
         else:
             return None
         result["name"] = item
-        result["url"] = link
+        result["url"] = tip["link"]
         return result
 
     def get_tag(self, item):
-        area, note, _link, _file = TIPS[item]
-        return f"{area} · {note}"
+        tip = TIPS[item]
+        return f"{tip['area']} · {tip['tag']}"
+
+    def get_details(self, item):
+        tip = TIPS[item]
+        lat, lon, zoom = tip["pin"]
+        return {
+            "text": tip["text"],
+            "area": {"name": tip["area"], "url": AREAS[tip["area"]]},
+            "map": {"lat": lat, "lon": lon, "zoom": zoom},
+        }
 
 
 PROVIDERS = [

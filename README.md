@@ -20,10 +20,15 @@ Live at [kr.memi.click](https://kr.memi.click)
 - **language** — 20 everyday phrases: read the English, reveal the Polish
   (the prompt is a rendered text card, not a photo)
 - **marta’s tips** — a local's battle-tested favourites in Kazimierz and
-  around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…); the
-  tag carries Marta's note and *know more* opens the venue's own page.
-  Venues have pinned Commons photos; drop a photo at
-  `memi_kr/static/tips/<slug>.jpg` (e.g. `metal-wino.jpg`) to add or replace one
+  around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…). On
+  reveal, a details panel shows Marta's own note, a link to the area and a
+  map pin; *know more* opens the venue's own page. Venues have pinned Commons
+  photos; drop a photo at `memi_kr/static/tips/<slug>.<ext>` (e.g.
+  `metal-wino.jpg`) to add or replace one
+
+The game uses the engine's **enriched** layout (`layout="enriched"`): the
+details panel beside the card and a prominent *know more* button, pinned to
+the bottom of the screen on phones.
 
 Images and *know more* links resolve from Wikipedia automatically. A small
 `WikiImages` mixin relaxes the engine's strict title lookup — following
