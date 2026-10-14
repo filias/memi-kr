@@ -711,10 +711,35 @@ def _text_card(text):
     return "data:image/svg+xml;base64," + b64
 
 
+AUDIO_DIR = Path(__file__).resolve().parent.parent / "static" / "audio"
+_AUDIO_EXTS = (".mp3", ".m4a", ".ogg", ".wav", ".webm", ".aac")
+
+
+def phrase_slug(polish):
+    """``"jak się masz?"`` -> ``"jak-sie-masz"`` (recording filename)."""
+    folded = unicodedata.normalize("NFKD", polish.replace("ł", "l").replace("Ł", "L"))
+    ascii_text = folded.encode("ascii", "ignore").decode().lower()
+    return "-".join(re.findall(r"[a-z0-9]+", ascii_text))
+
+
 class Language(CategoryProvider):
     key = "language"
     light_bg = True
     items = list(PHRASES)
+
+    def get_audio(self, item):
+        """The Polish phrase, spoken: a native speaker's recording from
+        static/audio/<slug>.<ext> when there is one, else the browser's voice."""
+        polish = PHRASES[item]
+        slug = phrase_slug(polish)
+        recording = next(
+            (AUDIO_DIR / f"{slug}{ext}" for ext in _AUDIO_EXTS if (AUDIO_DIR / f"{slug}{ext}").exists()),
+            None,
+        )
+        audio = {"text": polish, "lang": "pl-PL"}
+        if recording:
+            audio["src"] = f"/static/audio/{recording.name}"
+        return audio
 
     def get_image(self, item):
         polish = PHRASES[item]

@@ -22,7 +22,11 @@ Live at [kr.memi.click](https://kr.memi.click)
 - **people** — 15 famous cracovians, tagged with what they're known for; the
   details panel opens with their link to Kraków
 - **language** — 20 everyday phrases: read the English, reveal the Polish
-  (the prompt is a rendered text card, not a photo)
+  (the prompt is a rendered text card, not a photo). On reveal a speaker
+  button says the Polish: a native speaker's recording from
+  `memi_kr/static/audio/` when there is one, else the browser's Polish voice.
+  Import recordings (named after their phrase, e.g. `dziękuję.m4a`) with
+  `uv run python scripts/import_audio.py <files>`
 - **marta’s tips** — a local's battle-tested favourites in Kazimierz and
   around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…). On
   reveal, a details panel shows Marta's own note, a link to the area and a

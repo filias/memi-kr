@@ -157,3 +157,17 @@ def test_every_person_has_a_krakow_line_in_the_panel(monkeypatch):
         first = text.split("\n\n")[0]
         assert "Kraków" in first or "Kazimierz" in first, f"{item}: no Kraków link"
         assert text.endswith("Intro."), item
+
+
+def test_language_audio_prefers_a_recording(tmp_path, monkeypatch):
+    lang = cat.Language()
+    monkeypatch.setattr(cat, "AUDIO_DIR", tmp_path)
+    # No recording yet: the browser speaks the Polish.
+    assert lang.get_audio("how are you?") == {"text": "jak się masz?", "lang": "pl-PL"}
+    (tmp_path / "jak-sie-masz.m4a").write_bytes(b"")
+    assert lang.get_audio("how are you?")["src"] == "/static/audio/jak-sie-masz.m4a"
+
+
+def test_phrase_slugs_are_unique():
+    slugs = [cat.phrase_slug(p) for p in cat.PHRASES.values()]
+    assert len(slugs) == len(set(slugs))
