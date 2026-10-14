@@ -295,15 +295,15 @@ wheels = [
 
 [[package]]
 name = "memi-engine"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flask" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/73/dd/7e05dcaadb5004b66c01117af595a4272d51916a5a6e0e3138b7a635f674/memi_engine-0.4.0.tar.gz", hash = "sha256:4380e5360fdf3783dc92afeb6319e99a5c22712df20e15117aa5cb9b4ac686f9", size = 52779, upload-time = "2026-10-14T08:52:49.553Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8e/7c/6be521b0400d4a4d361e1ee31a907b3bc093bfc34639dd0118c48338b063/memi_engine-0.4.1.tar.gz", hash = "sha256:48d473832008815fc95fb5b824088d5a79e6894efacde36b6cb208ab2ed50fa8", size = 52900, upload-time = "2026-10-14T09:37:35.196Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c6/9f/aee3fc2eea3befff4b28baaf10f8fc1d17b2a5d2674d489a8f8178b114b9/memi_engine-0.4.0-py3-none-any.whl", hash = "sha256:2e399ae73bb34dade4a9371ecf4cebac09b6639de7e5758921c572e3dce33d98", size = 57560, upload-time = "2026-10-14T08:52:48.343Z" },
+    { url = "https://files.pythonhosted.org/packages/57/ef/079025eae7111cdeb07d0333ce628a2b2d58dd9d7ef61f5172f8b733c098/memi_engine-0.4.1-py3-none-any.whl", hash = "sha256:ce6911ab49496fe7c6be5a0d1cef426ee42a1e460b75b8273ad10c8b2e3961d1", size = 57687, upload-time = "2026-10-14T09:37:34.006Z" },
 ]
 
 [[package]]
@@ -325,7 +325,7 @@ dev = [
 requires-dist = [
     { name = "flask", specifier = ">=3.0" },
     { name = "gunicorn", specifier = ">=22" },
-    { name = "memi-engine", specifier = ">=0.4.0" },
+    { name = "memi-engine", specifier = ">=0.4.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
 ]
 provides-extras = ["dev"]
