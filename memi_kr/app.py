@@ -55,8 +55,8 @@ config = MemiConfig(
             <li><strong>language:</strong> everyday phrases &mdash; read the
             English, say the Polish, then listen to how it sounds.</li>
             <li><strong>marta&rsquo;s tips:</strong> battle-tested cafés, bars,
-            food and a cinema in Kazimierz and around the Rynek, from
-            Marta.</li>
+            food, a bookshop and a cinema in Kazimierz and around the Rynek,
+            from Marta and the team.</li>
         </ul>
 
         <h2>How to play</h2>
@@ -90,7 +90,7 @@ config = MemiConfig(
         Creative Commons licences (district photo credits are listed
         <a href="https://github.com/filias/memi-kr/blob/main/memi_kr/static/districts/CREDITS.md">here</a>).
         Maps &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
-        contributors. Tips by Marta.</p>
+        contributors. Tips from Marta and the team.</p>
     """,
     # Injected at the bottom of every page (after the engine's app.js loads).
     analytics_html=_GOATCOUNTER_JS,

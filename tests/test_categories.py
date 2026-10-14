@@ -76,6 +76,7 @@ def test_marta_tips_have_details():
         assert tip["area"] in cat.AREAS, f"{item} has an unknown area"
         assert tip["link"].startswith("https://"), f"{item} has no link"
         assert tips.get_tag(item).startswith(tip["area"])
+        assert tips.get_tag(item).endswith(f"from {tip['by']}")
         details = tips.get_details(item)
         assert details["text"], f"{item} has no text"
         assert details["area"]["url"].startswith("https://")

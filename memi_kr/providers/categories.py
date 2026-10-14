@@ -781,10 +781,10 @@ class Language(CategoryProvider):
 
 
 # --------------------------------------------------------------------------- #
-# Marta's tips — a local's battle-tested favourites in Kazimierz and around    #
-# the Rynek. The card tag is short (area · tag); the enriched layout's details #
-# panel carries Marta's own words, a link to the area and a map pin. "know     #
-# more" opens the venue's own page.                                            #
+# Marta's tips — favourite places in Kazimierz and around the Rynek, mostly    #
+# Marta's, each credited to whoever shared it (tag: area · tag · from who).    #
+# The details panel carries their own words, a link to the area and a map      #
+# pin; "know more" opens the venue's own page.                                 #
 # Most venues have no Wikipedia article, so images are pinned Commons photos;  #
 # a file in static/tips/<slug>.<ext> takes precedence (and is the only source  #
 # for venues with no Commons photo — those are skipped until one is added).    #
@@ -802,6 +802,7 @@ TIPS = {
     # Pins are OpenStreetMap coordinates of the venue (or its address).
     "Kazimierz": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "the coolest place to be",
         "text": (
             "Kraków is special not only because of Poles but also because of "
@@ -815,6 +816,7 @@ TIPS = {
     },
     "Klezmer-Hois": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "Jewish food",
         "text": "Jewish food in Kazimierz.",
         "link": "https://klezmer.pl/klezmer-hois/",
@@ -823,6 +825,7 @@ TIPS = {
     },
     "Hevre": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "café-bar in an old synagogue",
         "text": (
             "Café, restaurant and bar in an old synagogue. Hevre means "
@@ -837,6 +840,7 @@ TIPS = {
     },
     "Metal Wino": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "wine bar next to Hevre",
         "text": (
             "Wine bar, a much smaller partner in crime to Hevre :) Really great "
@@ -850,6 +854,7 @@ TIPS = {
     },
     "Okrąglak": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "get a zapiekanka",
         "text": (
             "If you want something quick and fast-foody to eat, you go there. "
@@ -861,6 +866,7 @@ TIPS = {
     },
     "Judah Food Market": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "food court, bring warm clothes",
         "text": (
             "Another iconic place in Kazimierz. It's a food court: you can grab "
@@ -873,6 +879,7 @@ TIPS = {
     },
     "Lokator": {
         "area": "Kazimierz",
+        "by": "Marta",
         "tag": "bookshop for book lovers",
         "text": (
             "One more tip for book lovers :) A bookshop and publisher — they've "
@@ -884,6 +891,7 @@ TIPS = {
     },
     "Bunkier Cafe": {
         "area": "Rynek",
+        "by": "Marta",
         "tag": "glass café on the Planty",
         "text": (
             "It's on the Planty, the huge park around the city centre — Planty "
@@ -899,6 +907,7 @@ TIPS = {
     },
     "Nowa Prowincja": {
         "area": "Rynek",
+        "by": "Marta",
         "tag": "iconic bar & coffee shop",
         "text": "Another iconic bar / coffee shop.",
         "link": "https://karnet.krakowculture.pl/531-krakow-nowa-prowincja",
@@ -907,6 +916,7 @@ TIPS = {
     },
     "Kino Pod Baranami": {
         "area": "Rynek",
+        "by": "Marta",
         "tag": "a beautiful old cinema",
         "text": (
             "A very beautiful movie theatre. You can watch Lalka there, a Polish "
@@ -922,8 +932,37 @@ TIPS = {
         "photo": "Kraków, Pałac Pod Baranami w Krakowie.jpg",
         "pin": (50.0616001, 19.9352018, 17),
     },
+    "Cytat Café": {
+        "area": "Kazimierz",
+        "by": "Cristina",
+        "tag": "café full of books",
+        "text": (
+            "Cristina was recommended this one too: a café that's also a "
+            "second-hand bookshop, with shelves and an archway made of books. "
+            "They bake their own bread for breakfast."
+        ),
+        # Their own site (cytatcafe.pl) has an expired certificate.
+        "link": (
+            "https://www.google.com/maps/place/Cytat+Caf%C3%A9/@50.0526879,19.945034,17z/"
+            "data=!4m6!3m5!1s0x47165b6af115a03b:0xb31bc17ebef0b863!8m2!3d50.0526879!4d19.945034"
+        ),
+        "photo": None,
+        "pin": (50.0526879, 19.945034, 17),
+    },
+    "Black Duck": {
+        "area": "Rynek",
+        "by": "Cristina",
+        "tag": "Polish restaurant",
+        "text": (
+            "Cristina was recommended this one: Czarna Kaczka, a Polish "
+            "restaurant between the Rynek and Wawel. The house speciality is, "
+            "as the name says, roast duck."
+        ),
+        "link": "https://czarnakaczka.pl/",
+        "photo": "Restoracja Czarna Kaczka w Krakowie.jpg",
+        "pin": (50.0582485, 19.9391763, 17),
+    },
 }
-
 
 def tip_slug(name):
     """``"Judah Food Market"`` -> ``"judah-food-market"`` (local photo filename)."""
@@ -959,7 +998,7 @@ class MartasTips(CategoryProvider):
 
     def get_tag(self, item):
         tip = TIPS[item]
-        return f"{tip['area']} · {tip['tag']}"
+        return f"{tip['area']} · {tip['tag']} · from {tip['by']}"
 
     def get_details(self, item):
         tip = TIPS[item]

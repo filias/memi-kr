@@ -28,8 +28,9 @@ Live at [kr.memi.click](https://kr.memi.click)
   Import recordings (named after their phrase, e.g. `dziękuję.m4a`) with
   `uv run python scripts/import_audio.py <files>`
 - **marta’s tips** — a local's battle-tested favourites in Kazimierz and
-  around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…). On
-  reveal, a details panel shows Marta's own note, a link to the area and a
+  around the Rynek (Hevre, Okrąglak, Bunkier Cafe, Kino Pod Baranami…), plus
+  tips from other colleagues; each card says who it's from (`by` in `TIPS`).
+  On reveal, a details panel shows the tip's own note, a link to the area and a
   map pin; *know more* opens the venue's own page. Venues have pinned Commons
   photos; drop a photo at `memi_kr/static/tips/<slug>.<ext>` (e.g.
   `metal-wino.jpg`) to add or replace one
