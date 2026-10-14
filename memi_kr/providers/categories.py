@@ -616,7 +616,7 @@ TIPS = {
             "the art gallery as well."
         ),
         "link": "https://www.instagram.com/cafebunkier/",
-        "photo": "Bunkier Cafe, Kraków, 2024, 01.jpg",
+        "photo": "Bunkier Sztuki w kwietniu 2026 r. 04 kawiarnia.jpg",
         "pin": (50.0635805, 19.9344469, 17),
     },
     "Nowa Prowincja": {
