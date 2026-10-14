@@ -18,8 +18,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from memi_kr.providers.categories import AUDIO_DIR, PHRASES, phrase_slug  # noqa: E402
 
-TRIM = "silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.1"
-FILTERS = ",".join([TRIM, "areverse", TRIM, "areverse", "loudnorm=I=-16:TP=-1.5:LRA=11"])
+# Trim leading silence, then (reversed) trailing silence. The threshold is low
+# and some silence is kept so quiet endings — the "sz" in "masz", a nasal "ę" —
+# aren't clipped; apad leaves a short tail so the clip doesn't stop dead.
+TRIM = "silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.15"
+FILTERS = ",".join([
+    TRIM, "areverse", TRIM, "areverse",
+    "loudnorm=I=-16:TP=-1.5:LRA=11", "apad=pad_dur=0.15",
+])
 
 
 def main(paths):
