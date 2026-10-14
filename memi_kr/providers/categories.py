@@ -694,6 +694,32 @@ PHRASES = {
 }
 
 
+# For the details panel: how to say it (stress in capitals — in Polish it's
+# almost always the second-to-last syllable) and when to use it.
+PHRASE_NOTES = {
+    "cześć": ("cheshch", "The everyday hi — and bye — among friends. With strangers, say dzień dobry."),
+    "dzień dobry": ("jen DOB-ri", "The polite hello, used all day until the evening; it literally means \"good day\"."),
+    "dobry wieczór": ("DOB-ri VYEH-choor", "The polite hello once evening comes."),
+    "dobranoc": ("do-BRAH-nots", "Said when going to bed or leaving late at night — not as a greeting."),
+    "do widzenia": ("do vee-DZEH-nya", "The polite goodbye; literally \"until seeing (you again)\"."),
+    "do zobaczenia": ("do zo-ba-CHEH-nya", "A warmer goodbye when you'll meet again — \"see you\"."),
+    "dziękuję": ("jen-KOO-yeh", "Thank you. Among friends, the shorter dzięki (JEN-kee) is fine."),
+    "proszę": ("PRO-sheh", "Please — but also \"here you go\", \"you're welcome\" and \"pardon?\". You'll hear it everywhere."),
+    "nie ma za co": ("nyeh ma ZA tso", "You're welcome; literally \"there's nothing (to thank) for\"."),
+    "tak": ("tahk", "Yes. Often doubled, tak tak, as in \"yes, yes, I know\"."),
+    "nie": ("nyeh", "No — and also \"not\": nie wiem, \"I don't know\"."),
+    "przepraszam": ("psheh-PRAH-sham", "Sorry, and the way to say \"excuse me\" to get someone's attention or squeeze past."),
+    "jak się masz?": ("yak sheh MASH", "How are you? — to friends. To a stranger, jak się pan/pani ma?"),
+    "na zdrowie!": ("na ZDRO-vyeh", "Cheers! Literally \"to health\" — and also what you say when someone sneezes."),
+    "nie rozumiem": ("nyeh ro-ZOO-myem", "I don't understand. Add proszę wolniej — \"slower, please\"."),
+    "pomocy!": ("po-MO-tsi", "Help! Emergency number in Poland: 112."),
+    "woda": ("VO-da", "Water. In a restaurant: gazowana (sparkling) or niegazowana (still)."),
+    "piwo": ("PEE-vo", "Beer. Ordering: jedno piwo, proszę — \"one beer, please\"."),
+    "przyjaciel": ("pshi-YA-chel", "A close friend (a woman is przyjaciółka); for a mate or colleague, kolega."),
+    "miłość": ("MEE-woshch", "Love, the noun. \"I love you\" is kocham cię (KO-ham chyeh)."),
+}
+
+
 def _text_card(text):
     """Render a short English phrase as an SVG data-URI to use as the card image."""
     size = min(60, max(28, 780 // max(len(text), 1)))
@@ -726,6 +752,10 @@ class Language(CategoryProvider):
     key = "language"
     light_bg = True
     items = list(PHRASES)
+
+    def get_details(self, item):
+        say, note = PHRASE_NOTES[PHRASES[item]]
+        return {"text": f"Say: {say}\n\n{note}"}
 
     def get_audio(self, item):
         """The Polish phrase, spoken: a native speaker's recording from

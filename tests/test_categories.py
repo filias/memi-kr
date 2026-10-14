@@ -171,3 +171,11 @@ def test_language_audio_prefers_a_recording(tmp_path, monkeypatch):
 def test_phrase_slugs_are_unique():
     slugs = [cat.phrase_slug(p) for p in cat.PHRASES.values()]
     assert len(slugs) == len(set(slugs))
+
+
+def test_every_phrase_has_a_pronunciation_and_note():
+    lang = cat.Language()
+    assert set(cat.PHRASE_NOTES) == set(cat.PHRASES.values())
+    for item in lang.items:
+        text = lang.get_details(item)["text"]
+        assert text.startswith("Say: ") and "\n\n" in text, item
