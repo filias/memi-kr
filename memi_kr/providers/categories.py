@@ -528,16 +528,99 @@ class Folklore(WikiDetails, WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 PEOPLE = {
-    # name: (known for, born–died)
-    "Pope John Paul II": ("pope, Archbishop of Kraków", "1920–2005"),
-    "Stanisław Lem": ("science-fiction writer", "1921–2006"),
-    "Wisława Szymborska": ("poet, Nobel laureate", "1923–2012"),
-    "Andrzej Wajda": ("film director", "1926–2016"),
-    "Jan Matejko": ("painter", "1838–1893"),
-    "Stanisław Wyspiański": ("playwright and painter", "1869–1907"),
-    "Helena Modjeska": ("actress", "1840–1909"),
-    "Veit Stoss": ("sculptor of the St. Mary's altarpiece", "c. 1447–1533"),
-    "Czesław Miłosz": ("poet, Nobel laureate", "1911–2004"),
+    # name: (known for, born–died, their Kraków link — leads the details panel,
+    # since a Wikipedia intro doesn't always mention the city)
+    "Pope John Paul II": (
+        "pope, Archbishop of Kraków",
+        "1920–2005",
+        "Came to Kraków in 1938 to study at the Jagiellonian University, and was "
+        "Archbishop of Kraków from 1964 until his election as pope in 1978.",
+    ),
+    "Stanisław Lem": (
+        "science-fiction writer",
+        "1921–2006",
+        "Settled in Kraków after the war and lived there for the rest of his "
+        "life; he is buried in the city's Salwator Cemetery.",
+    ),
+    "Wisława Szymborska": (
+        "poet, Nobel laureate",
+        "1923–2012",
+        "Lived in Kraków from the age of eight until her death, and studied at "
+        "the Jagiellonian University.",
+    ),
+    "Andrzej Wajda": (
+        "film director",
+        "1926–2016",
+        "Studied painting at Kraków's Academy of Fine Arts, and founded the "
+        "city's Manggha Museum of Japanese Art and Technology.",
+    ),
+    "Jan Matejko": (
+        "painter",
+        "1838–1893",
+        "Born in Kraków, he studied at the city's School of Fine Arts and later "
+        "ran it; today it is the Jan Matejko Academy of Fine Arts.",
+    ),
+    "Stanisław Wyspiański": (
+        "playwright and painter",
+        "1869–1907",
+        "Born in Kraków; his stained glass fills the Franciscan Basilica, and his "
+        "play The Wedding is set in Bronowice, now part of the city.",
+    ),
+    "Helena Modjeska": (
+        "actress",
+        "1840–1909",
+        "Born in Kraków, where she began her stage career before moving to "
+        "Warsaw and, in 1876, to the United States.",
+    ),
+    "Veit Stoss": (
+        "sculptor of the St. Mary's altarpiece",
+        "c. 1447–1533",
+        "Spent some twenty years in Kraków, where he carved the great altarpiece "
+        "of St. Mary's Basilica (1477–1489).",
+    ),
+    "Czesław Miłosz": (
+        "poet, Nobel laureate",
+        "1911–2004",
+        "Spent his last years in Kraków and is buried in the Crypt of Merit at "
+        "Skałka.",
+    ),
+    "Nicolaus Copernicus": (
+        "astronomer",
+        "1473–1543",
+        "Studied at the University of Kraków — today's Jagiellonian University — "
+        "from 1491 to about 1495.",
+    ),
+    "Tadeusz Kościuszko": (
+        "military leader",
+        "1746–1817",
+        "Swore his oath on Kraków's Main Square in 1794, starting the Kościuszko "
+        "Uprising; he is buried in Wawel Cathedral, and Kościuszko Mound honours "
+        "him.",
+    ),
+    "Oskar Schindler": (
+        "industrialist",
+        "1908–1974",
+        "Ran an enamel factory in Kraków's Zabłocie district, where he protected "
+        "the Jewish workers he would save from the Holocaust.",
+    ),
+    "Helena Rubinstein": (
+        "cosmetics entrepreneur",
+        "1872–1965",
+        "Born in Kazimierz, Kraków's Jewish quarter, before building her "
+        "cosmetics empire abroad.",
+    ),
+    "Józef Piłsudski": (
+        "statesman",
+        "1867–1935",
+        "His Polish Legions set out from Kraków in 1914; he is buried in Wawel "
+        "Cathedral, and Piłsudski's Mound honours him.",
+    ),
+    "Bronisław Malinowski": (
+        "anthropologist",
+        "1884–1942",
+        "Born in Kraków, he took his doctorate at the Jagiellonian University "
+        "before pioneering anthropological fieldwork in London.",
+    ),
 }
 
 
@@ -548,8 +631,14 @@ class People(WikiDetails, WikiImages, CategoryProvider):
     tag_style = "plain"
 
     def get_tag(self, item):
-        role, years = PEOPLE[item]
+        role, years, _krakow = PEOPLE[item]
         return f"{role} · {years}"
+
+    def get_details(self, item):
+        """Their Kraków link first, then the Wikipedia intro."""
+        krakow = PEOPLE[item][2]
+        intro = (super().get_details(item) or {}).get("text")
+        return {"text": f"{krakow}\n\n{intro}" if intro else krakow}
 
 
 # --------------------------------------------------------------------------- #

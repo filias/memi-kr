@@ -19,7 +19,8 @@ Live at [kr.memi.click](https://kr.memi.click)
   `memi_kr/static/districts/` (credits in `CREDITS.md` there)
 - **geography → green** — 6 green spaces and the river (Vistula, Błonia, the
   Botanical Garden, Kraków Zoo…)
-- **people** — 9 famous cracovians, tagged with what they're known for
+- **people** — 15 famous cracovians, tagged with what they're known for; the
+  details panel opens with their link to Kraków
 - **language** — 20 everyday phrases: read the English, reveal the Polish
   (the prompt is a rendered text card, not a photo)
 - **marta’s tips** — a local's battle-tested favourites in Kazimierz and

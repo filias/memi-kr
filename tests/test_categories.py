@@ -147,3 +147,13 @@ def test_intro_trims_at_sentences_not_abbreviations():
     assert cat.wiki_intro(raw, limit=80) == (
         "First sentence here. Second one is near St. Mary's altar."
     )
+
+
+def test_every_person_has_a_krakow_line_in_the_panel(monkeypatch):
+    monkeypatch.setattr(cat, "wiki_article", lambda title: {"intro": "Intro.", "coords": None})
+    people = cat.People()
+    for item in people.items:
+        text = people.get_details(item)["text"]
+        first = text.split("\n\n")[0]
+        assert "Kraków" in first or "Kazimierz" in first, f"{item}: no Kraków link"
+        assert text.endswith("Intro."), item
