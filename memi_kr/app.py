@@ -19,6 +19,41 @@ _GOATCOUNTER_JS = (
     ' async src="//gc.zgo.at/count.js"></script>'
 )
 
+# --------------------------------------------------------------------------- #
+# "know more" — the engine renders it as small grey text in the row under the  #
+# card, which on a phone falls below the fold (the card fills the width). Make #
+# it an accent pill, and on phones pin it to the bottom of the screen while    #
+# it's showing (the engine toggles its inline display on reveal). The engine   #
+# has no custom-CSS hook, so this rides along in analytics_html.               #
+# --------------------------------------------------------------------------- #
+
+_KNOW_MORE_CSS = """<style>
+.more-link {
+    padding: 0.35rem 1rem;
+    border: 2px solid var(--accent);
+    border-radius: 2rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+.more-link:hover { background: var(--accent); color: var(--bg); }
+@media (max-width: 600px) {
+    .more-link {
+        position: fixed;
+        left: 50%;
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        z-index: 50;
+        padding: 0.75rem 1.75rem;
+        background: var(--accent);
+        color: var(--bg);
+        font-size: 1rem;
+        white-space: nowrap;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    body { padding-bottom: 5rem; }
+}
+</style>"""
+
 config = MemiConfig(
     title="memi kraków",
     subtitle="name the sights, food and people of Kraków",
@@ -57,7 +92,7 @@ config = MemiConfig(
         picture it also leans on the <em>picture superiority effect</em>.</p>
     """,
     # Injected at the bottom of every page (after the engine's app.js loads).
-    analytics_html=_GOATCOUNTER_JS,
+    analytics_html=_KNOW_MORE_CSS + _GOATCOUNTER_JS,
 )
 
 # static/ holds photos for cards with no usable Commons image (Marta's tips).
