@@ -28,9 +28,11 @@ Live at [kr.memi.click](https://kr.memi.click)
 
 The game uses the engine's **enriched** layout (`layout="enriched"`): the
 details panel beside the card and a prominent *know more* button, pinned to
-the bottom of the screen on phones. Sights, districts, green spaces and
-folklore get a map pin from the card's Wikidata coordinates (dropped when they
-fall outside Kraków, like the Vistula's mouth on the Baltic).
+the bottom of the screen on phones. Every card except language fills the
+panel from its Wikipedia article: the opening paragraph (pronunciation asides
+stripped, trimmed to whole sentences) and, for places, a map pin from the
+article's Wikidata coordinates (dropped when they fall outside Kraków, like the
+Vistula's mouth on the Baltic).
 
 Images and *know more* links resolve from Wikipedia automatically. A small
 `WikiImages` mixin relaxes the engine's strict title lookup — following
