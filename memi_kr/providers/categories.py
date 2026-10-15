@@ -652,6 +652,7 @@ class PolishToEnglish(EnglishToPolish):
 
     key = "language:polish → english"
     items = list(ENGLISH)
+    submenu_default = True
 
     def polish(self, item):
         return item

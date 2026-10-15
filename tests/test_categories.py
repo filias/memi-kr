@@ -54,11 +54,13 @@ def test_polish_to_english_is_the_other_way_round():
         assert to_en.get_audio(pl) == to_pl.get_audio(en)
 
 
-def test_old_language_link_opens_english_to_polish():
+def test_language_opens_on_polish_to_english():
+    assert cat.PolishToEnglish.submenu_default
+    assert not cat.EnglishToPolish.submenu_default
     client = app_module.app.test_client()
     r = client.get("/language")
     assert r.status_code == 301
-    assert r.headers["Location"].endswith("/english-polish")
+    assert r.headers["Location"].endswith("/polish-english")
     assert client.get("/english-polish").status_code == 200
     assert client.get("/polish-english").status_code == 200
 

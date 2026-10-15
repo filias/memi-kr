@@ -102,11 +102,11 @@ config = MemiConfig(
 app = create_app(config, instance_static=str(Path(__file__).parent / "static"))
 
 
-# Language was one category until it got a Polish → English direction; links
-# to it were already shared, so its old address opens the original direction.
+# Language was one category until it got two directions; links to it were
+# already shared, so its old address opens the default one.
 @app.route("/language")
 def old_language_link():
-    return redirect("/english-polish", code=301)
+    return redirect("/polish-english", code=301)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8091)
