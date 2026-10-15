@@ -11,7 +11,7 @@ import re
 import unicodedata
 from functools import lru_cache
 from pathlib import Path
-from urllib.parse import quote, unquote
+from urllib.parse import quote
 
 import requests
 from memi_engine import CategoryProvider, images, register
@@ -66,155 +66,10 @@ class WikiImages:
         return wiki_image(self.queries.get(item, item))
 
 
-# Rough bounding box of Kraków. Wikipedia coordinates outside it belong to
-# something other than the place on the card (the Vistula's are its mouth on
-# the Baltic), so they get no map.
-KRAKOW_BBOX = {"lat": (49.96, 50.13), "lon": (19.79, 20.22)}
-
-
-_article_cache = {}
-
-
-def wiki_article(title, lang=WIKIPEDIA_LANG):
-    """The intro and coordinates of a Wikipedia article, or ``None`` on failure.
-
-    Returns ``{"intro": str, "coords": (lat, lon) | None}``. Coordinates come
-    from the article's Wikidata item rather than Wikipedia's own: those are
-    often only "secondary" (absent from the default API answer) and sometimes
-    plain wrong (MOCAK's sit 25 km west of the city).
-
-    Answers are cached; failed requests are not, so a network blip doesn't hide
-    a card's details for good.
-    """
-    key = (title, lang)
-    if key in _article_cache:
-        return _article_cache[key]
-    try:
-        resp = requests.get(
-            f"https://{lang}.wikipedia.org/w/api.php",
-            params={
-                "action": "query",
-                "format": "json",
-                "prop": "extracts|pageprops",
-                "exintro": 1,
-                "explaintext": 1,
-                "ppprop": "wikibase_item",
-                "redirects": 1,
-                "titles": title,
-            },
-            headers=_WIKI_UA,
-            timeout=5,
-        )
-        resp.raise_for_status()
-        page = next(iter(resp.json()["query"]["pages"].values()))
-        qid = page.get("pageprops", {}).get("wikibase_item")
-        coords = None
-        if qid:
-            resp = requests.get(
-                "https://www.wikidata.org/w/api.php",
-                params={
-                    "action": "wbgetclaims",
-                    "format": "json",
-                    "entity": qid,
-                    "property": "P625",
-                },
-                headers=_WIKI_UA,
-                timeout=5,
-            )
-            resp.raise_for_status()
-            claims = resp.json()["claims"].get("P625", [])
-            if claims:
-                value = claims[0]["mainsnak"]["datavalue"]["value"]
-                coords = (value["latitude"], value["longitude"])
-    except Exception:
-        return None
-    article = {"intro": wiki_intro(page.get("extract", "")), "coords": coords}
-    _article_cache[key] = article
-    return article
-
-
-# A parenthetical that is pronunciation or other-language names — "(Polish:
-# Sukiennice, pronounced [sukʲɛˈɲːit͡sɛ])" — rather than content. A comma right
-# after it belonged to the aside when the sentence carries on with its verb
-# ("The Cloth Hall (…), is a …").
-_ASIDE = re.compile(
-    r"\s*\((?=[^()]*(?:\[|:|pronounc|listen|in Polish))[^()]*\)"
-    r"(?:,(?=\s+(?:is|are|was|were)\b))?"
-)
-_IPA = re.compile(r"\s*\[[^\[\]]*\]")
-# A full stop that ends a sentence, not an abbreviation ("St. Mary's", "ul.
-# Lipowa", "d. 1673") or an initial ("Jan A. Kowalski").
-_SENTENCE_END = re.compile(
-    r"(?<!\bSt\.)(?<!\bul\.)(?<!\bMt\.)(?<!\bDr\.)(?<!\blit\.)"
-    r"(?<!\bd\.)(?<!\bb\.)(?<!\bc\.)(?<!\b[A-Z]\.)"
-    r"(?<=[.!?])\s+(?=[A-Z])"
-)
-
-
-def wiki_intro(extract, limit=600):
-    """First paragraph of a plain-text extract, minus pronunciation asides.
-
-    Trimmed to whole sentences within ``limit`` characters (the first sentence
-    is always kept).
-    """
-    para = next((p.strip() for p in extract.split("\n") if p.strip()), "")
-    # Innermost asides first, so nested ones — "(Polish: […]; colloquially
-    # kremówka (Polish: […]))" — peel away level by level.
-    for _ in range(3):
-        para = _ASIDE.sub("", para)
-    para = _IPA.sub("", para)
-    # Whatever is left of an aside that never closed ("Napoleonka (Polish: ;
-    # colloquially kremówka is a …"): drop it up to its verb, within the
-    # sentence.
-    para = re.sub(
-        r"\s*\((?![^()]*\))[^().]*?[;:][^().]*?(?=\s(?:is|are|was|were)\b)", "", para
-    )
-    para = re.sub(r"\s+([,.;])", r"\1", re.sub(r"\s{2,}", " ", para)).strip()
-    # A quoted name leading the paragraph: "”Manggha” Museum …".
-    para = re.sub(r"^[\"“”„]([^\"“”„]+)[\"“”„]", r"\1", para)
-    if len(para) <= limit:
-        return para
-    sentences = _SENTENCE_END.split(para)
-    kept = sentences[0]
-    for sentence in sentences[1:]:
-        if len(kept) + 1 + len(sentence) > limit:
-            break
-        kept += " " + sentence
-    return kept
-
-
-class WikiDetails:
-    """Mixin: the details panel from the card's Wikipedia article.
-
-    The article's opening paragraph, plus a map pin for places (``map_zoom``;
-    ``None`` for things that aren't places, like food or people). The article
-    is whatever the card's "know more" link points at, so it follows each
-    provider's own title resolution (queries, pinned files, …).
-    """
-
-    map_zoom = 16
-
-    def get_details(self, item):
-        result = self.get_image(item)
-        url = (result or {}).get("url", "")
-        if "/wiki/" not in url:
-            return None
-        title = unquote(url.rsplit("/wiki/", 1)[1]).replace("_", " ")
-        article = wiki_article(title)
-        if not article:
-            return None
-        details = {}
-        if article["intro"]:
-            details["text"] = article["intro"]
-        if self.map_zoom and article["coords"] and in_krakow(*article["coords"]):
-            lat, lon = article["coords"]
-            details["map"] = {"lat": lat, "lon": lon, "zoom": self.map_zoom}
-        return details or None
-
-
-def in_krakow(lat, lon):
-    (lat_min, lat_max), (lon_min, lon_max) = KRAKOW_BBOX["lat"], KRAKOW_BBOX["lon"]
-    return lat_min <= lat <= lat_max and lon_min <= lon <= lon_max
+# Rough bounds of Kraków for the details panel's map. Wikidata coordinates
+# outside it belong to something other than the place on the card (the
+# Vistula's are its mouth on the Baltic), so they get no map.
+KRAKOW_BOUNDS = ((49.96, 50.13), (19.79, 20.22))
 
 
 # --------------------------------------------------------------------------- #
@@ -269,8 +124,10 @@ SIGHT_DATES = {
 }
 
 
-class Sights(WikiDetails, WikiImages, CategoryProvider):
+class Sights(WikiImages, CategoryProvider):
     key = "culture:sights"
+    map_zoom = 16
+    map_bounds = KRAKOW_BOUNDS
     override_name = True
     tag_style = "plain"
     items = [
@@ -450,9 +307,10 @@ def district_slug(name):
     return "-".join(folded.encode("ascii", "ignore").decode().lower().split())
 
 
-class Districts(WikiDetails, CategoryProvider):
+class Districts(CategoryProvider):
     key = "geography:districts"
     map_zoom = 14
+    map_bounds = KRAKOW_BOUNDS
     override_name = True
     items = list(DISTRICTS)
 
@@ -479,9 +337,8 @@ class Districts(WikiDetails, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Food(WikiDetails, WikiImages, CategoryProvider):
+class Food(WikiImages, CategoryProvider):
     key = "culture:food"
-    map_zoom = None
     override_name = True
     light_bg = True
     items = [
@@ -508,8 +365,10 @@ class Food(WikiDetails, WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Folklore(WikiDetails, WikiImages, CategoryProvider):
+class Folklore(WikiImages, CategoryProvider):
     key = "culture:folklore"
+    map_zoom = 16
+    map_bounds = KRAKOW_BOUNDS
     override_name = True
     items = [
         "Wawel Dragon",
@@ -624,9 +483,8 @@ PEOPLE = {
 }
 
 
-class People(WikiDetails, WikiImages, CategoryProvider):
+class People(WikiImages, CategoryProvider):
     key = "people"
-    map_zoom = None
     items = list(PEOPLE)
     tag_style = "plain"
 
@@ -646,9 +504,10 @@ class People(WikiDetails, WikiImages, CategoryProvider):
 # --------------------------------------------------------------------------- #
 
 
-class Green(WikiDetails, WikiImages, CategoryProvider):
+class Green(WikiImages, CategoryProvider):
     key = "geography:green"
     map_zoom = 15
+    map_bounds = KRAKOW_BOUNDS
     override_name = True
     items = [
         "Vistula",

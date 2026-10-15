@@ -1,5 +1,7 @@
 """Smoke tests: the game boots, registers its categories, and its data is sane."""
 
+from memi_engine import images
+
 from memi_kr import app as app_module
 from memi_kr.providers import categories as cat
 
@@ -93,65 +95,38 @@ def test_marta_tips_prefer_local_photo(tmp_path, monkeypatch):
     assert r["url"] == cat.TIPS["Metal Wino"]["link"]
 
 
+def _article(monkeypatch, intro, coords):
+    monkeypatch.setattr(
+        images, "get_wikipedia_article", lambda title, lang=None: {"intro": intro, "coords": coords}
+    )
+
+
 def test_maps_only_for_places_inside_krakow(monkeypatch):
     monkeypatch.setattr(
         cat.Green, "get_image", lambda self, item: {"url": "https://en.wikipedia.org/wiki/Vistula"}
     )
     # The Vistula's Wikidata point is its mouth on the Baltic: text, no map.
-    monkeypatch.setattr(
-        cat, "wiki_article", lambda title: {"intro": "A river.", "coords": (54.36, 18.95)}
-    )
+    _article(monkeypatch, "A river.", (54.36, 18.95))
     assert cat.Green().get_details("Vistula") == {"text": "A river."}
-    monkeypatch.setattr(
-        cat, "wiki_article", lambda title: {"intro": "A river.", "coords": (50.0544, 19.9366)}
-    )
+    _article(monkeypatch, "A river.", (50.0544, 19.9366))
     assert cat.Green().get_details("Vistula")["map"] == {
         "lat": 50.0544, "lon": 19.9366, "zoom": cat.Green.map_zoom
     }
 
 
 def test_food_and_people_get_text_but_no_map(monkeypatch):
-    monkeypatch.setattr(
-        cat, "wiki_article", lambda title: {"intro": "Dumplings.", "coords": (50.06, 19.94)}
-    )
+    _article(monkeypatch, "Dumplings.", (50.06, 19.94))
     monkeypatch.setattr(
         cat.Food, "get_image", lambda self, item: {"url": "https://en.wikipedia.org/wiki/Pierogi"}
     )
     assert cat.Food().get_details("Pierogi") == {"text": "Dumplings."}
 
 
-def test_article_failures_are_not_cached(monkeypatch):
-    def boom(*a, **k):
-        raise OSError("network down")
-
-    monkeypatch.setattr(cat.requests, "get", boom)
-    cat._article_cache.clear()
-    assert cat.wiki_article("Wawel Castle") is None
-    assert ("Wawel Castle", "en") not in cat._article_cache
-
-
-def test_intro_drops_pronunciation_asides():
-    raw = (
-        "The Cloth Hall (Polish: Sukiennice, pronounced [sukʲɛˈɲːit͡sɛ]), is a "
-        "historic cloth hall.\nSecond paragraph."
-    )
-    assert cat.wiki_intro(raw) == "The Cloth Hall is a historic cloth hall."
-    nested = (
-        "Napoleonka (Polish: [napɔlɛˈɔnka] ; colloquially kremówka (Polish: "
-        "[krɛˈmufka] ), is a Polish type of cream pie. It is made of puff pastry, filled."
-    )
-    assert cat.wiki_intro(nested).startswith("Napoleonka is a Polish type of cream pie.")
-
-
-def test_intro_trims_at_sentences_not_abbreviations():
-    raw = "First sentence here. Second one is near St. Mary's altar. " + "Long " * 30
-    assert cat.wiki_intro(raw, limit=80) == (
-        "First sentence here. Second one is near St. Mary's altar."
-    )
-
-
 def test_every_person_has_a_krakow_line_in_the_panel(monkeypatch):
-    monkeypatch.setattr(cat, "wiki_article", lambda title: {"intro": "Intro.", "coords": None})
+    _article(monkeypatch, "Intro.", None)
+    monkeypatch.setattr(
+        cat.People, "get_image", lambda self, item: {"url": "https://en.wikipedia.org/wiki/X"}
+    )
     people = cat.People()
     for item in people.items:
         text = people.get_details(item)["text"]
