@@ -28,17 +28,39 @@ def test_expected_category_keys():
         "geography:districts",
         "geography:green",
         "people",
-        "language",
+        "language:english → polish",
+        "language:polish → english",
         "marta’s tips",
     }
 
 
 def test_language_cards_reveal_polish():
-    lang = cat.Language()
+    lang = cat.EnglishToPolish()
     for en in lang.items:
         r = lang.get_image(en)
         assert r["name"] == cat.PHRASES[en]           # revealed answer is Polish
         assert r["image"].startswith("data:image/svg+xml")  # prompt is a text card
+
+
+def test_polish_to_english_is_the_other_way_round():
+    to_pl, to_en = cat.EnglishToPolish(), cat.PolishToEnglish()
+    assert sorted(to_en.items) == sorted(cat.PHRASES.values())
+    for en, pl in cat.PHRASES.items():
+        r = to_en.get_image(pl)
+        assert r["name"] == en                         # revealed answer is English
+        assert r["image"] == cat._text_card(pl)        # prompt shows the Polish
+        # Same note and the same Polish voice either way.
+        assert to_en.get_details(pl) == to_pl.get_details(en)
+        assert to_en.get_audio(pl) == to_pl.get_audio(en)
+
+
+def test_old_language_link_opens_english_to_polish():
+    client = app_module.app.test_client()
+    r = client.get("/language")
+    assert r.status_code == 301
+    assert r.headers["Location"].endswith("/english-polish")
+    assert client.get("/english-polish").status_code == 200
+    assert client.get("/polish-english").status_code == 200
 
 
 def test_every_sight_has_a_date():
@@ -136,7 +158,7 @@ def test_every_person_has_a_krakow_line_in_the_panel(monkeypatch):
 
 
 def test_language_audio_prefers_a_recording(tmp_path, monkeypatch):
-    lang = cat.Language()
+    lang = cat.EnglishToPolish()
     monkeypatch.setattr(cat, "AUDIO_DIR", tmp_path)
     # No recording yet: the browser speaks the Polish.
     assert lang.get_audio("how are you?") == {"text": "jak się masz?", "lang": "pl-PL"}
@@ -150,7 +172,7 @@ def test_phrase_slugs_are_unique():
 
 
 def test_every_phrase_has_a_pronunciation_and_note():
-    lang = cat.Language()
+    lang = cat.EnglishToPolish()
     assert set(cat.PHRASE_NOTES) == set(cat.PHRASES.values())
     for item in lang.items:
         text = lang.get_details(item)["text"]

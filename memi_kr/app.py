@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from flask import redirect
 from memi_engine import MemiConfig, create_app
 
 import memi_kr.providers  # noqa: F401  (import registers the providers)
@@ -52,8 +53,9 @@ config = MemiConfig(
             map of where it is, and the city's parks and green spaces.</li>
             <li><strong>people:</strong> famous cracovians and what ties them to
             the city.</li>
-            <li><strong>language:</strong> everyday phrases &mdash; read the
-            English, say the Polish, then listen to how it sounds.</li>
+            <li><strong>language:</strong> everyday phrases, both ways &mdash;
+            read the English and say the Polish, or read the Polish and name
+            the English; then listen to how it sounds.</li>
             <li><strong>marta&rsquo;s tips:</strong> battle-tested cafés, bars,
             food, a bookshop and a cinema in Kazimierz and around the Rynek,
             from Marta and the team.</li>
@@ -98,6 +100,13 @@ config = MemiConfig(
 
 # static/ holds photos for cards with no usable Commons image (Marta's tips).
 app = create_app(config, instance_static=str(Path(__file__).parent / "static"))
+
+
+# Language was one category until it got a Polish → English direction; links
+# to it were already shared, so its old address opens the original direction.
+@app.route("/language")
+def old_language_link():
+    return redirect("/english-polish", code=301)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8091)

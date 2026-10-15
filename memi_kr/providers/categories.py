@@ -580,7 +580,7 @@ PHRASE_NOTES = {
 
 
 def _text_card(text):
-    """Render a short English phrase as an SVG data-URI to use as the card image."""
+    """Render a short phrase as an SVG data-URI to use as the card image."""
     size = min(60, max(28, 780 // max(len(text), 1)))
     safe = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     svg = (
@@ -596,6 +596,9 @@ def _text_card(text):
     return "data:image/svg+xml;base64," + b64
 
 
+# The same phrases keyed by their Polish, for the Polish → English direction.
+ENGLISH = {polish: english for english, polish in PHRASES.items()}
+
 AUDIO_DIR = Path(__file__).resolve().parent.parent / "static" / "audio"
 _AUDIO_EXTS = (".mp3", ".m4a", ".ogg", ".wav", ".webm", ".aac")
 
@@ -607,19 +610,32 @@ def phrase_slug(polish):
     return "-".join(re.findall(r"[a-z0-9]+", ascii_text))
 
 
-class Language(CategoryProvider):
-    key = "language"
+class EnglishToPolish(CategoryProvider):
+    """Read the English, say the Polish."""
+
+    key = "language:english → polish"
     light_bg = True
     items = list(PHRASES)
 
+    def polish(self, item):
+        return PHRASES[item]
+
+    def get_image(self, item):
+        polish = self.polish(item)
+        return {
+            "name": polish,
+            "image": _text_card(item),
+            "url": f"https://en.wiktionary.org/wiki/{quote(polish)}",
+        }
+
     def get_details(self, item):
-        say, note = PHRASE_NOTES[PHRASES[item]]
+        say, note = PHRASE_NOTES[self.polish(item)]
         return {"text": f"Say: {say}\n\n{note}"}
 
     def get_audio(self, item):
         """The Polish phrase, spoken: a native speaker's recording from
         static/audio/<slug>.<ext> when there is one, else the browser's voice."""
-        polish = PHRASES[item]
+        polish = self.polish(item)
         slug = phrase_slug(polish)
         recording = next(
             (AUDIO_DIR / f"{slug}{ext}" for ext in _AUDIO_EXTS if (AUDIO_DIR / f"{slug}{ext}").exists()),
@@ -630,13 +646,18 @@ class Language(CategoryProvider):
             audio["src"] = f"/static/audio/{recording.name}"
         return audio
 
+
+class PolishToEnglish(EnglishToPolish):
+    """The other way round: read the Polish, name the English."""
+
+    key = "language:polish → english"
+    items = list(ENGLISH)
+
+    def polish(self, item):
+        return item
+
     def get_image(self, item):
-        polish = PHRASES[item]
-        return {
-            "name": polish,
-            "image": _text_card(item),
-            "url": f"https://en.wiktionary.org/wiki/{quote(polish)}",
-        }
+        return {**super().get_image(item), "name": ENGLISH[item]}
 
 
 # --------------------------------------------------------------------------- #
@@ -876,7 +897,8 @@ PROVIDERS = [
     Districts(),
     Green(),
     People(),
-    Language(),
+    EnglishToPolish(),
+    PolishToEnglish(),
     MartasTips(),
 ]
 for _provider in PROVIDERS:

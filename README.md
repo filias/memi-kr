@@ -21,8 +21,10 @@ Live at [kr.memi.click](https://kr.memi.click)
   Botanical Garden, Kraków Zoo…)
 - **people** — 15 famous cracovians, tagged with what they're known for; the
   details panel opens with their link to Kraków
-- **language** — 20 everyday phrases: read the English, reveal the Polish
-  (the prompt is a rendered text card, not a photo). On reveal a speaker
+- **language** — 20 everyday phrases, in two directions: *english → polish*
+  (read the English, reveal the Polish) and *polish → english* (the other way
+  round); the submenu's *all* chip mixes both. The prompt is a rendered text
+  card, not a photo, and the old `/language` link opens english → polish. On reveal a speaker
   button says the Polish: a native speaker's recording from
   `memi_kr/static/audio/` when there is one, else the browser's Polish voice.
   Import recordings (named after their phrase, e.g. `dziękuję.m4a`) with
