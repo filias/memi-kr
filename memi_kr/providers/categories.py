@@ -660,6 +660,10 @@ class PolishToEnglish(EnglishToPolish):
     def get_image(self, item):
         return {**super().get_image(item), "name": ENGLISH[item]}
 
+    def get_audio(self, item):
+        # Hearing the Polish is part of the question here: listen, then answer.
+        return {**super().get_audio(item), "before_reveal": True}
+
 
 # --------------------------------------------------------------------------- #
 # Marta's tips — favourite places in Kazimierz and around the Rynek, mostly    #

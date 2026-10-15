@@ -49,9 +49,11 @@ def test_polish_to_english_is_the_other_way_round():
         r = to_en.get_image(pl)
         assert r["name"] == en                         # revealed answer is English
         assert r["image"] == cat._text_card(pl)        # prompt shows the Polish
-        # Same note and the same Polish voice either way.
+        # Same note and the same Polish voice either way; polish → english
+        # lets you hear it before answering.
         assert to_en.get_details(pl) == to_pl.get_details(en)
-        assert to_en.get_audio(pl) == to_pl.get_audio(en)
+        assert to_en.get_audio(pl) == {**to_pl.get_audio(en), "before_reveal": True}
+        assert "before_reveal" not in to_pl.get_audio(en)
 
 
 def test_language_opens_on_polish_to_english():
