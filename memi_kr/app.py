@@ -20,6 +20,29 @@ _GOATCOUNTER_JS = (
     ' async src="//gc.zgo.at/count.js"></script>'
 )
 
+# --------------------------------------------------------------------------- #
+# Home card — Kraków's city limits in its flag (white over blue) above "pick a #
+# category". The engine has no setting for the empty card, so this rides on   #
+# analytics_html (raw HTML at the bottom of every page, after app.js); loading #
+# a category replaces the card's text, so the map goes with it.               #
+# static/flag-map-krakow.svg: the boundary from OpenStreetMap (ODbL).         #
+# --------------------------------------------------------------------------- #
+_HOME_CARD_HTML = """
+<style>
+    #status.home { width: 100%; text-align: center; }
+    #status .home-map { display: block; width: 80%; margin: 0 auto 1.5rem; }
+</style>
+<script>
+(function () {
+    var status = document.getElementById('status');
+    if (status && status.textContent.trim() === 'pick a category') {
+        status.classList.add('home');
+        status.insertAdjacentHTML('afterbegin', '<img class="home-map" src="/static/flag-map-krakow.svg" alt="Kraków">');
+    }
+})();
+</script>
+"""
+
 config = MemiConfig(
     title="memi kraków",
     # Details panel beside the card (Marta's notes + map) and a prominent
@@ -95,7 +118,7 @@ config = MemiConfig(
         contributors. Tips from Marta and the team.</p>
     """,
     # Injected at the bottom of every page (after the engine's app.js loads).
-    analytics_html=_GOATCOUNTER_JS,
+    analytics_html=_GOATCOUNTER_JS + _HOME_CARD_HTML,
 )
 
 # static/ holds photos for cards with no usable Commons image (Marta's tips).
