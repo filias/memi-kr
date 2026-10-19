@@ -21,7 +21,7 @@ Live at [kr.memi.click](https://kr.memi.click)
   Botanical Garden, Kraków Zoo…)
 - **people** — 15 famous cracovians, tagged with what they're known for; the
   details panel opens with their link to Kraków
-- **language** — 20 everyday phrases, in two directions: *polish → english*
+- **language** — 21 everyday phrases, in two directions: *polish → english*
   (read the Polish, reveal the English; what the submenu opens on) and
   *english → polish* (the other way round); the submenu's *all* chip mixes
   both. The prompt is a rendered text card, not a photo, and the old
