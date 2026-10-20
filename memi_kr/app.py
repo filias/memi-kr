@@ -30,7 +30,7 @@ _GOATCOUNTER_JS = (
 _HOME_CARD_HTML = """
 <style>
     #status.home { width: 100%; text-align: center; }
-    #status .home-map { display: block; width: 80%; margin: 0 auto 1.5rem; }
+    #status .home-map, #done-art .home-map { display: block; width: 80%; margin: 0 auto 1.5rem; }
 </style>
 <script>
 (function () {
@@ -119,6 +119,8 @@ config = MemiConfig(
     """,
     # Injected at the bottom of every page (after the engine's app.js loads).
     analytics_html=_GOATCOUNTER_JS + _HOME_CARD_HTML,
+    # The "all done" card shows the same flag map as the home card.
+    done_html='<img class="home-map" src="/static/flag-map-krakow.svg" alt="Kraków">',
 )
 
 # static/ holds photos for cards with no usable Commons image (Marta's tips).
